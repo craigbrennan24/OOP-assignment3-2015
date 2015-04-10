@@ -4,51 +4,67 @@ using System.Collections;
 public class GameController : MonoBehaviour {
 
 	public Vector2[] spawnPoints;
+	public Vector2[,] blockPositions;
 	public Blick[,] blickGrid;
-	public GameObject block;
+	public GameObject blockSpawner;
+	public static bool _gameOver = false;
+	//Testing: _spawnNextAs will tell the block script what it should spawn itself as, then revert it to -1.
+	//-1 = random color at random spawnpoint
+	//0 - 6 = specified color at random spawnpoint
+	public static int _spawnNextAs = 0;
 	float blockSize;
 	float lastFall = 3;
-	int rows = 17;
-	int cols = 8;
+	public const int rows = 17;
+	public const int cols = 8;
 	int count = 0;
 	bool blockInPlay = false;
 
 	// Use this for initialization
 	void Start () {
-		setupSpawnPoints ();
-		blickGrid = new Blick[2,2];
-		blickGrid [0,0] = new Blick ();
+		spawnPoints = GetComponent<SetupScript>().setupSpawnPoints ();
+		blockPositions = GetComponent<SetupScript>().setupBlockPositions ();
+		blickGrid = GetComponent<SetupScript>().setupBlicks ();
+		Instantiate (blockSpawner, new Vector3 (0, 0, 0), Quaternion.identity);
 	}
 
 	bool BlockInPlay(){
 		return blockInPlay;
 	}
-
-	void setupSpawnPoints()
-	{
-		spawnPoints = new Vector2[8];
-		float inc = 0.75f;
-		float start = -2.625f;
-
-		for (int i = 0; i < cols; i++) {
-			spawnPoints[i] = new Vector2(start + (inc*i), 7.625f);
-		}
-		Instantiate (block, spawnPoints [0], Quaternion.identity);
-	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Time.time - lastFall > 0.5f) {
-			if( count < 15 )
+	}
+
+	public Vector2 findAvailableSpawnPoint()
+	{
+		Vector2 ret = new Vector2 ();
+		if (spawnPointExists ()) {
+			//Check if spawn point is empty, find another if not
+			bool spawnPointValid = false;
+			int x = 0;
+			while( !spawnPointValid )
 			{
-				GameObject[] g = GameObject.FindGameObjectsWithTag("Block");
-				foreach (GameObject obj in g) {
-					obj.transform.position = new Vector3 (obj.transform.position.x, obj.transform.position.y - Blick.size, 0);
+				x = Random.Range (0,cols);
+				if( !blickGrid[x, (rows-1)].isOccupied() )
+				{
+					spawnPointValid = true;
 				}
-				count++;
-				lastFall = Time.time;
+			}
+			ret = new Vector2(x, (rows-1));
+		}
+		return ret;
+	}
+
+	public bool spawnPointExists()
+	{
+		bool ret = false;
+		for (int i = 0; i < cols; i++) {
+			if( !blickGrid[i,(rows-1)].isOccupied() )
+			{
+				ret = true;
 			}
 		}
+		return ret;
 	}
 
 	void OnGUI()
@@ -74,6 +90,11 @@ public class GameController : MonoBehaviour {
 		GUI.TextArea (new Rect ((Screen.width / 2) - (width/2), (Screen.height / 2) - (width/2), width, width), touchPos + "\n" + blockPos);
 	}
 
+	void createStartingBlocks()
+	{
+
+	}
+
 	public int getRows()
 	{
 		return rows;
@@ -86,15 +107,26 @@ public class GameController : MonoBehaviour {
 
 	public static bool playerIsTouching( Collider2D col )
 	{
+		//Find if the player is touching a gameobject's collider
 		bool ret = false;
 		if (Input.touchCount == 1) {
 			Vector3 wp = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
 			Vector2 touchPos = new Vector2 (wp.x, wp.y);
-			if (col == Physics2D.OverlapPoint (touchPos)) {
+			if (col.GetComponent<Collider2D>() == Physics2D.OverlapPoint (touchPos)) {
 				ret = true;
 			}
 		}
 		return ret;
+	}
+
+	public bool allBlocksSettled()
+	{
+		/*bool ret = true;
+		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Block");
+		foreach (GameObject obj in objects) {
+			if ( blickGrid[][] )
+		}*/
+		return true;
 	}
 }
 
@@ -104,7 +136,6 @@ public class Blick
 	//They do not need vectors because the place they sit in the array they are held in
 	//corresponds to the point they represent on the board.
 	//They also hold misc data
-	public static float size = 0.75f;
 	public static float fallDelay = 1f;
 	bool occupied;
 	bool settled;
