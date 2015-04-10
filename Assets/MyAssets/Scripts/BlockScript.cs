@@ -86,7 +86,7 @@ public class BlockScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Time.time - spawned > 5)
-			Destroy (this);
+			Destroy (gameObject);
 		block.Update ();
 		float z_t = GetComponent<Transform> ().position.z;
 		Vector2 t = GameObject.FindWithTag("GameController").GetComponent<GameController>().blockPositions[(int)block.blickPos.x, (int)block.blickPos.y];
