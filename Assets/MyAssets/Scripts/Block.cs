@@ -23,15 +23,15 @@ public class Block {
 		new Color( 0, 255, 255 ) //Cyan
 	};
 	
-	public Block() : this( Random.Range(0,numBlockTypes-1) ){
+	public Block() : this( Random.Range(0,numBlockTypes) ){
 		//If no parameters, create block at one of the spawnpoints with random type
 	}
 	
-	public Block( Vector2 pos ) : this( pos, Random.Range(0,numBlockTypes-1) ){
+	public Block( Vector2 pos ) : this( pos, Random.Range(0,numBlockTypes) ){
 		//If position parameter, create block at position with random type
 	}
 	
-	public Block( int type ) : this( GameController.accessGameController().findAvailableSpawnPoint(), Random.Range(0,numBlockTypes-1) ){
+	public Block( int type ) : this( GameController.accessGameController().findAvailableSpawnPoint(), Random.Range(0,numBlockTypes) ){
 		//if only type parameter, create block at one of the spawnpoints with specified type
 	}
 	

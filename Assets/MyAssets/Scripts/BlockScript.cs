@@ -21,8 +21,8 @@ public class BlockScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Time.time - spawned > 8)
-			Destroy (gameObject);
+		/*if (Time.time - spawned > 4)
+			Destroy (gameObject);*/
 		block.update ();
 		float z_t = GetComponent<Transform> ().position.z;
 		Vector3 cmp = new Vector3( pos.x, pos.y, z_t );

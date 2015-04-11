@@ -34,7 +34,7 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (_gameSetup) {
-			createStartingBlocks ( 16 );
+			createStartingBlocks ( 2 );
 			_gameSetup = false;
 		}
 	}
@@ -73,25 +73,19 @@ public class GameController : MonoBehaviour {
 
 	void OnGUI()
 	{
-		drawText ();
+		//drawText ();
 	}
 
 	void drawText()
 	{
 		string touchPos = "touch: ";
-		string blockPos = "block: ";
-		GameObject tObj = GameObject.FindGameObjectWithTag("Block");
 		if (Input.touchCount == 1) {
 			Vector3 t = Camera.main.ScreenToWorldPoint( Input.GetTouch(0).position );
 			Vector2 t1 = new Vector2( t.x, t.y );
 			touchPos += t1.x + "," + t1.y;
 		}
-		if (tObj != null) {
-			Vector2 t = new Vector2( tObj.transform.position.x, tObj.transform.position.y);
-			blockPos += t.x + "," + t.y;
-		}
 		float width = 200;
-		GUI.TextArea (new Rect ((Screen.width / 2) - (width/2), (Screen.height / 2) - (width/2), width, width), touchPos + "\n" + blockPos);
+		GUI.TextArea (new Rect ((Screen.width / 2) - (width/2), (Screen.height / 2) - (width/2), width, width/2), touchPos );
 	}
 
 	void createStartingBlocks( int startLines)
