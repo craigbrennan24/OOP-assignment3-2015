@@ -57,6 +57,14 @@ public class BlockScript : MonoBehaviour {
 		public void Update()
 		{
 
+			Blick thisBlock = GameObject.FindWithTag ("GameController").GetComponent<GameController> ().blickGrid [(int)blickPos.x, (int)blickPos.y];
+			if (!thisBlock.isSettled()) {
+				//Get space beneath block to check if it should continue falling
+				Blick t = GameObject.FindWithTag ("GameController").GetComponent<GameController> ().blickGrid [(int)blickPos.x, (int)(blickPos.y - 1)];
+				if (t.isSettled() ) {
+					thisBlock.setSettled (true);
+				}
+			}
 		}
 
 		void updateBlick()
@@ -80,7 +88,6 @@ public class BlockScript : MonoBehaviour {
 		block = new Block (GameObject.FindWithTag("GameController").GetComponent<GameController>().findAvailableSpawnPoint());
 		GetComponent<SpriteRenderer> ().color = block.getColor ();
 		pos = GameObject.FindWithTag ("GameController").GetComponent<GameController> ().blockPositions [(int)block.blickPos.x, (int)block.blickPos.y];
-
 	}
 	
 	// Update is called once per frame
@@ -89,8 +96,7 @@ public class BlockScript : MonoBehaviour {
 			Destroy (gameObject);
 		block.Update ();
 		float z_t = GetComponent<Transform> ().position.z;
-		Vector2 t = GameObject.FindWithTag("GameController").GetComponent<GameController>().blockPositions[(int)block.blickPos.x, (int)block.blickPos.y];
-		Vector3 cmp = new Vector3( t.x, t.y, z_t );
+		Vector3 cmp = new Vector3( pos.x, pos.y, z_t );
 		if( GetComponent<Transform>().position != cmp ){
 			GetComponent<Transform>().position = cmp;
 		}

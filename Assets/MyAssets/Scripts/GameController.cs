@@ -12,11 +12,8 @@ public class GameController : MonoBehaviour {
 	//-1 = random color at random spawnpoint
 	//0 - 6 = specified color at random spawnpoint
 	public static int _spawnNextAs = 0;
-	float blockSize;
-	float lastFall = 3;
 	public const int rows = 17;
 	public const int cols = 8;
-	int count = 0;
 	bool blockInPlay = false;
 
 	// Use this for initialization
@@ -155,5 +152,15 @@ public class Blick
 	public bool isSettled()
 	{
 		return settled;
+	}
+
+	public void setSettled( bool settled )
+	{
+		this.settled = settled;
+	}
+
+	public void setOccupied( bool occupied )
+	{
+		this.occupied = occupied;
 	}
 }

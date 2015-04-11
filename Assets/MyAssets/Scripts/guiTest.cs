@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class guiTest : MonoBehaviour {
+		//TOUCH TEST SCRIPT
 		public GameController g;
 		public Vector2 t = new Vector2(0,0);
 		Vector2 t1 = new Vector2 (0, 0);
