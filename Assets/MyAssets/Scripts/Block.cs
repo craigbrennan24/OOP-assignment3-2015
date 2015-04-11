@@ -38,6 +38,8 @@ public class Block {
 	
 	public Block( Vector2 pos, int type )
 	{
+		if (Vector2.Equals (pos, new Vector2 (0, 0)))
+			GameController._gameOver = true;
 		blickPos = pos;
 		this.type = type;
 		controlledByPlayer = false;
@@ -64,6 +66,11 @@ public class Block {
 		controlledByPlayer = true;
 	}
 
+	public void removePlayerControl ()
+	{
+		controlledByPlayer = false;
+	}
+
 	public int getType()
 	{
 		return type;
@@ -81,7 +88,7 @@ public class Block {
 		ret = null;
 		foreach (GameObject block in blocks) {
 			if( Vector2.Equals(blickPos,block.GetComponent<BlockScript>().block.blickPos) )
-			   {
+			{
 				ret = block;
 			}
 		}
@@ -91,27 +98,26 @@ public class Block {
 	public void update()
 	{
 		Blick thisBlock = getBlick ();
-		if (blickPos.y != 0) 
+		if ( blickPos.y != 0 )
 		{
-				//Get space beneath block to check if it should continue falling
-				Blick t = GameController.accessGameController().blickGrid [(int)blickPos.x, (int)(blickPos.y - 1)];
-				if (!t.isOccupied())
-				{
-					thisBlock.setSettled (false);
-					fall ();
-				}
-				else
-				{
-					thisBlock.setSettled(true);
-					updateBlick();
-				}
+			//Get space beneath block to check if it should continue falling
+			Blick underBlock = GameController.accessGameController().blickGrid [(int)blickPos.x, (int)(blickPos.y - 1)];
+			if ( !underBlock.isOccupied() ){
+				thisBlock.setSettled (false);
+				fall ();
+			}
+			else
+			{
+				thisBlock.setSettled(true);
+				updateBlick();
+			}
 		}
 		else 
 		{
 			thisBlock.setSettled(true);
 		}
-		if (controlledByPlayer && thisBlock.isSettled ()) {
-			controlledByPlayer = false;
+		if ( isControlledByPlayer() && thisBlock.isSettled ()) {
+			removePlayerControl();
 			GameController.accessGameController().blockInPlay = false;
 		}
 	}
@@ -119,7 +125,7 @@ public class Block {
 	void updateBlick()
 	{
 		Blick thisBlick = getBlick ();
-		if (!thisBlick.isOccupied ()) {
+		if ( !thisBlick.isOccupied () ) {
 			thisBlick.setOccupied(true);
 			thisBlick.block = this;
 		}
@@ -139,7 +145,11 @@ public class Block {
 	{
 		Blick thisBlock = getBlick ();
 		if (!thisBlock.isSettled ()) {
-
+			if( Time.time - GameController.lastFall > GameController.fallDelay )
+			{
+				moveBlock( new Vector2( blickPos.x, (blickPos.y-1) ) );
+				GameController.lastFall = Time.time;
+			}
 		}
 	}
 }

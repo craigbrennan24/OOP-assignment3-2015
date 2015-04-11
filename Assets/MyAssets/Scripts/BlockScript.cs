@@ -19,18 +19,20 @@ public class BlockScript : MonoBehaviour {
 			block.givePlayerControl ();
 		}
 		GetComponent<SpriteRenderer> ().color = block.getColor ();
-		pos = GameController.accessGameController().blockPositions [(int)block.blickPos.x, (int)block.blickPos.y];
 	}
 
 	// Update is called once per frame
 	void Update () {
-		block.update ();
-		verifyPosColor ();
+		if (!GameController._gameOver) {
+			block.update ();
+			verifyPosColor ();
+		}
 	}
 
 	void verifyPosColor()
 	{
 		//Used to check to make sure the block gameobject matches up with its block
+		pos = GameController.accessGameController().blockPositions [(int)block.blickPos.x, (int)block.blickPos.y];
 		float z_t = GetComponent<Transform> ().position.z;
 		Vector3 cmp = new Vector3( pos.x, pos.y, z_t );
 		if( GetComponent<Transform>().position != cmp ){

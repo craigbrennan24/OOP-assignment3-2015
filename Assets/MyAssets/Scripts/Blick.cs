@@ -7,7 +7,6 @@ public class Blick {
 	//They do not need vectors because the place they sit in the array they are held in
 	//corresponds to the point they represent on the board.
 	//They also hold misc data
-	public static float fallDelay = 1f;
 	bool occupied;
 	bool settled;
 	public Block block;

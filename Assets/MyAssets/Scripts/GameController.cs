@@ -3,22 +3,29 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
+	//Statics + constants
+	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);
+	public static float fallDelay = 0f;
+	public static float lastFall = float.MaxValue;
+	public static bool _gameOver = false;
+	public const int rows = 17;
+	public const int cols = 8;
+
+	//Ingame reference vectors
 	public Vector2[] spawnPoints;
+	public Vector2[,] blockPositions;
+	public Blick[,] blickGrid;
+	public Vector2 customBlockSpawner;
+
+	//Flags and values
 	ArrayList startBlocks = new ArrayList();
 	int startLines;
-	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);
-	public Vector2[,] blockPositions;
 	public bool _gameSetup;
 	bool _gameSetup_1;
 	bool _gameSetup_2;
 	bool _gameSetup_3;
-	public Blick[,] blickGrid;
 	public GameObject blockSpawner;
-	public static bool _gameOver = false;
 	public bool customSpawn;
-	public Vector2 customBlockSpawner;
-	public const int rows = 17;
-	public const int cols = 8;
 	public bool blockInPlay;
 
 	// Use this for initialization
@@ -32,7 +39,7 @@ public class GameController : MonoBehaviour {
 	void initializeValues()
 	{
 		startBlocks = new ArrayList ();
-		startLines = 5;
+		startLines = 1;
 		_gameSetup = true;
 		_gameSetup_1 = true;
 		_gameSetup_2 = true;
@@ -48,28 +55,28 @@ public class GameController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (_gameSetup) {
-			//SETUP
-			if (_gameSetup_1) {
-				createStartingBlocks (startLines);
-				_gameSetup_1 = false;
-			} else if (_gameSetup_2) {
-				startingBlocksPass ();
-				if( !_gameSetup_3 )
-				{
-					_gameSetup_2 = false;
-					_gameSetup = false;
+		if (!_gameOver) {
+			if (_gameSetup) {
+				//SETUP
+				if (_gameSetup_1) {
+					createStartingBlocks (startLines);
+					_gameSetup_1 = false;
+				} else if (_gameSetup_2) {
+					startingBlocksPass ();
+					if (!_gameSetup_3) {
+						_gameSetup_2 = false;
+						_gameSetup = false;
+					}
+					_gameSetup_3 = false;
 				}
-				_gameSetup_3 = false;
+			} else {
+				if (!blockInPlay && allBlocksSettled ()) {
+					dropNewBlock ();
+				} else {
+				}
 			}
 		} else {
-			if( !blockInPlay && allBlocksSettled() )
-			{
-				dropNewBlock();
-			}
-			else
-			{
-			}
+
 		}
 	}
 
@@ -78,6 +85,7 @@ public class GameController : MonoBehaviour {
 		customSpawn = false;
 		Instantiate (blockSpawner, _hiddenSpawn, Quaternion.identity);
 		blockInPlay = true;
+		lastFall = Time.time;
 	}
 
 	public Vector2 findAvailableSpawnPoint()
@@ -114,19 +122,21 @@ public class GameController : MonoBehaviour {
 
 	void OnGUI()
 	{
-		//drawText ();
+		if( _gameOver )
+			drawText ();
 	}
 
 	void drawText()
 	{
 		string touchPos = "touch: ";
+		string gameOver = "GAME OVER";
 		if (Input.touchCount == 1) {
 			Vector3 t = Camera.main.ScreenToWorldPoint( Input.GetTouch(0).position );
 			Vector2 t1 = new Vector2( t.x, t.y );
 			touchPos += t1.x + "," + t1.y;
 		}
 		float width = 200;
-		GUI.TextArea (new Rect ((Screen.width / 2) - (width/2), (Screen.height / 2) - (width/2), width, width/2), touchPos );
+		GUI.TextArea (new Rect ((Screen.width / 2) - (width/2), (Screen.height / 2) - (width/2), width, width/2), touchPos + "\n\n\n" + gameOver );
 	}
 
 	void startingBlocksPass()
