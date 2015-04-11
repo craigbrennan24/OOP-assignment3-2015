@@ -10,7 +10,7 @@ public class SetupScript : MonoBehaviour {
 		Vector2[,] blockPositions = new Vector2[GameController.cols, GameController.rows];
 		for (int i = 0; i < blockPositions.GetLength(0); i++) {
 			for( int j = 0; j < blockPositions.GetLength(1); j++ ) {
-				blockPositions[i,j] = new Vector2( BlockScript.Block.startPos.x + (BlockScript.Block.size * i ), BlockScript.Block.startPos.y + (BlockScript.Block.size * j) );
+				blockPositions[i,j] = new Vector2( Block.startPos.x + (Block.size * i ), Block.startPos.y + (Block.size * j) );
 			}
 		}
 		return blockPositions;

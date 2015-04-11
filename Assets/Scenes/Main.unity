@@ -213,7 +213,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoints: []
+  _gameSetup: 1
   blockSpawner: {fileID: 194916, guid: 6a54c43dc58c8514cadd7bbdfad25bad, type: 2}
+  customSpawn: 0
+  customBlockSpawner: {x: 0, y: 0}
+  blockInPlay: 0
 --- !u!4 &781980064
 Transform:
   m_ObjectHideFlags: 0

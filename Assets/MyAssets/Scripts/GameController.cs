@@ -4,32 +4,39 @@ using System.Collections;
 public class GameController : MonoBehaviour {
 
 	public Vector2[] spawnPoints;
+	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);
 	public Vector2[,] blockPositions;
+	public bool _gameSetup = true;
 	public Blick[,] blickGrid;
 	public GameObject blockSpawner;
 	public static bool _gameOver = false;
+	public bool customSpawn = false;
+	public Vector2 customBlockSpawner;
 	//Testing: _spawnNextAs will tell the block script what it should spawn itself as, then revert it to -1.
 	//-1 = random color at random spawnpoint
 	//0 - 6 = specified color at random spawnpoint
 	public static int _spawnNextAs = 0;
 	public const int rows = 17;
 	public const int cols = 8;
-	bool blockInPlay = false;
+	public bool blockInPlay = false;
 
 	// Use this for initialization
 	void Start () {
 		spawnPoints = GetComponent<SetupScript>().setupSpawnPoints ();
 		blockPositions = GetComponent<SetupScript>().setupBlockPositions ();
 		blickGrid = GetComponent<SetupScript>().setupBlicks ();
-		Instantiate (blockSpawner, new Vector3 (0, 0, 0), Quaternion.identity);
 	}
 
 	bool BlockInPlay(){
 		return blockInPlay;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
+		if (_gameSetup) {
+			createStartingBlocks ( 16 );
+			_gameSetup = false;
+		}
 	}
 
 	public Vector2 findAvailableSpawnPoint()
@@ -87,9 +94,16 @@ public class GameController : MonoBehaviour {
 		GUI.TextArea (new Rect ((Screen.width / 2) - (width/2), (Screen.height / 2) - (width/2), width, width), touchPos + "\n" + blockPos);
 	}
 
-	void createStartingBlocks()
+	void createStartingBlocks( int startLines)
 	{
-
+		customSpawn = true;
+		for (int j = 0; j < startLines; j++) {
+			for( int i = 0; i < cols; i++ )
+			{
+				customBlockSpawner = new Vector2( i, j );
+				Instantiate (blockSpawner, customBlockSpawner, Quaternion.identity);
+			}
+		}
 	}
 
 	public int getRows()
@@ -118,49 +132,21 @@ public class GameController : MonoBehaviour {
 
 	public bool allBlocksSettled()
 	{
-		/*bool ret = true;
+		bool ret = true;
 		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Block");
 		foreach (GameObject obj in objects) {
-			if ( blickGrid[][] )
-		}*/
-		return true;
-	}
-}
-
-public class Blick
-{
-	//Blicks are points in space that keep track of and hold the falling blocks.
-	//They do not need vectors because the place they sit in the array they are held in
-	//corresponds to the point they represent on the board.
-	//They also hold misc data
-	public static float fallDelay = 1f;
-	bool occupied;
-	bool settled;
-
-
-	public Blick()
-	{
-		this.occupied = false;
-		this.settled = false;
+			if( !obj.GetComponent<BlockScript>().block.getBlick().isSettled() )
+			{
+				ret = false;
+				break;
+			}
+		}
+		return ret;
 	}
 
-	public bool isOccupied()
+	public static GameController accessGameController()
 	{
-		return occupied;
-	}
-
-	public bool isSettled()
-	{
-		return settled;
-	}
-
-	public void setSettled( bool settled )
-	{
-		this.settled = settled;
-	}
-
-	public void setOccupied( bool occupied )
-	{
-		this.occupied = occupied;
+		//'return this;' does not work because I want it to be static :(
+		return GameObject.FindWithTag ("GameController").GetComponent<GameController> ();
 	}
 }
