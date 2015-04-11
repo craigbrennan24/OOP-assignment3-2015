@@ -193,6 +193,7 @@ GameObject:
   - 4: {fileID: 781980064}
   - 114: {fileID: 781980063}
   - 114: {fileID: 781980066}
+  - 114: {fileID: 781980067}
   - 132: {fileID: 781980065}
   m_Layer: 0
   m_Name: Game Control
@@ -213,7 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoints: []
-  _gameSetup: 1
+  _gameSetup: 0
   blockSpawner: {fileID: 194916, guid: 6a54c43dc58c8514cadd7bbdfad25bad, type: 2}
   customSpawn: 0
   customBlockSpawner: {x: 0, y: 0}
@@ -262,6 +263,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 154a4370c660cf84b84e2d3b71be3428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &781980067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 781980062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd46b22e66663b44eb7878c2d8b976bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1187637191

@@ -4,7 +4,7 @@ using System.Collections;
 public class Block {
 
 	int type;
-	bool inPlay;
+	bool controlledByPlayer;
 	public static int numBlockTypes = 7;
 	public static float size = 0.75f;
 	public Vector2 blickPos;
@@ -14,13 +14,14 @@ public class Block {
 	//Stores value of finishing shapes with blocks
 	//type - 0 = i, 1 = j, 2 = l, 3 = o, 4 = s, 5 = t, 6 = z
 	public static int[] finishedShapePointValues = { 5, 8, 8, 7, 9, 7, 9 };  
-	public static Color[] blockColors = { new Color( 255, 135, 0 ), //Orange
-		new Color( 0, 0, 255 ), //Dark Blue
-		new Color( 0, 255, 0 ), //Green
-		new Color( 255, 255, 0 ), //Yellow
-		new Color( 255, 0, 0 ), //Red
-		new Color( 255, 0, 255 ), //Pink
-		new Color( 0, 255, 255 ) //Cyan
+	public static Color[] blockColors = { 
+		new Color( 1.0f, 0.53f, 0.0f, 1.0f ), //Orange
+		new Color( 0.0f, 0.0f, 1.0f, 1.0f ), //Dark Blue
+		new Color( 0.0f, 1.0f, 0.0f, 1.0f ), //Green
+		new Color( 1.0f, 0.92f, 0.016f, 1.0f ), //Yellow
+		new Color( 1.0f, 0.0f, 0.0f, 1.0f ), //Red
+		new Color( 1.0f, 0.0f, 1.0f, 1.0f ), //Pink
+		new Color( 0.0f, 1.0f, 1.0f, 1.0f ) //Cyan
 	};
 	
 	public Block() : this( Random.Range(0,numBlockTypes) ){
@@ -31,7 +32,7 @@ public class Block {
 		//If position parameter, create block at position with random type
 	}
 	
-	public Block( int type ) : this( GameController.accessGameController().findAvailableSpawnPoint(), Random.Range(0,numBlockTypes) ){
+	public Block( int type ) : this( GameController.accessGameController().findAvailableSpawnPoint(), type ){
 		//if only type parameter, create block at one of the spawnpoints with specified type
 	}
 	
@@ -39,19 +40,52 @@ public class Block {
 	{
 		blickPos = pos;
 		this.type = type;
-		inPlay = false;
+		controlledByPlayer = false;
 		//Set corresponding Blick to "occupied"
 		updateBlick ();
 	}
-	
-	public bool isInPlay()
+
+	public void moveBlock( Vector2 dest )
 	{
-		return inPlay;
+		Blick oldBlick = getBlick ();
+		oldBlick.setSettled (false);
+		oldBlick.setOccupied (false);
+		blickPos = dest;
+		updateBlick ();
 	}
 	
+	public bool isControlledByPlayer()
+	{
+		return controlledByPlayer;
+	}
+
+	public void givePlayerControl()
+	{
+		controlledByPlayer = true;
+	}
+
 	public int getType()
 	{
 		return type;
+	}
+
+	public void setType(int type)
+	{
+		this.type = type;
+	}
+
+	public GameObject getParentObject()
+	{
+		GameObject ret;
+		GameObject[] blocks = GameObject.FindGameObjectsWithTag ("Block");
+		ret = null;
+		foreach (GameObject block in blocks) {
+			if( Vector2.Equals(blickPos,block.GetComponent<BlockScript>().block.blickPos) )
+			   {
+				ret = block;
+			}
+		}
+		return ret;
 	}
 	
 	public void update()
@@ -76,8 +110,8 @@ public class Block {
 		{
 			thisBlock.setSettled(true);
 		}
-		if (inPlay && thisBlock.isSettled ()) {
-			inPlay = false;
+		if (controlledByPlayer && thisBlock.isSettled ()) {
+			controlledByPlayer = false;
 			GameController.accessGameController().blockInPlay = false;
 		}
 	}
