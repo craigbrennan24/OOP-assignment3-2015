@@ -20,27 +20,30 @@ public class PlayerController : MonoBehaviour {
 
 	void checkButtons()
 	{
-		if( Input.touchCount > 0 )
-		{
-			if( lastMoved_flag )
-			{
-				//Left
-				if (GameController.playerIsTouching (GameObject.Find ("LeftButton").GetComponent<Collider2D> ())) {
-					moveLeft();
-					lastMoved_flag = false;
-					lastMoved = Time.time;
-				}
-				//Right
-				else if( GameController.playerIsTouching(GameObject.Find("RightButton").GetComponent<Collider2D>()) )
-				{
+		if (Input.touchCount > 0) {
+			if (Input.GetTouch (0).phase != TouchPhase.Ended && Input.GetTouch (0).phase != TouchPhase.Canceled) {
+				if (lastMoved_flag) {
+					//Left
+					if (GameController.playerIsTouching (GameObject.Find ("LeftButton").GetComponent<Collider2D> ())) {
+						moveLeft ();
+						lastMoved_flag = false;
+						lastMoved = Time.time;
+					}
+					//Right
+					else if (GameController.playerIsTouching (GameObject.Find ("RightButton").GetComponent<Collider2D> ())) {
 
-					moveRight();
-					lastMoved_flag = false;
-					lastMoved = Time.time;
+						moveRight ();
+						lastMoved_flag = false;
+						lastMoved = Time.time;
+					}
 				}
 			}
+		} else {
+			lastMoved_flag = true;
 		}
 	}
+
+
 
 	public void moveRight()
 	{
