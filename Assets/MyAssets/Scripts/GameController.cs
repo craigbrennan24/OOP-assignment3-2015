@@ -5,7 +5,7 @@ public class GameController : MonoBehaviour {
 
 	//Statics + constants
 	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);
-	public static float fallDelay = 0f;
+	public static float fallDelay = 0.5f;
 	public static float lastFall = float.MaxValue;
 	public static bool _gameOver = false;
 	public const int rows = 17;
@@ -64,6 +64,7 @@ public class GameController : MonoBehaviour {
 				} else if (_gameSetup_2) {
 					startingBlocksPass ();
 					if (!_gameSetup_3) {
+						GetComponent<PlayerController>().lastMoved = Time.time;
 						_gameSetup_2 = false;
 						_gameSetup = false;
 					}

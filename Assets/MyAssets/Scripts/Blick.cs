@@ -43,5 +43,4 @@ public class Blick {
 	{
 		return block;
 	}
-
 }

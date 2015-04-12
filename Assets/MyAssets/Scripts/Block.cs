@@ -52,6 +52,7 @@ public class Block {
 		Blick oldBlick = getBlick ();
 		oldBlick.setSettled (false);
 		oldBlick.setOccupied (false);
+		oldBlick.block = null;
 		blickPos = dest;
 		updateBlick ();
 	}
@@ -151,5 +152,52 @@ public class Block {
 				GameController.lastFall = Time.time;
 			}
 		}
+	}
+
+
+	//CHECK NEARBY BLICK METHODS
+
+	public bool checkRight()
+	{
+		bool ret = false;
+		if (blickPos.x < (GameController.cols - 1)) {
+			Blick other = GameController.accessGameController ().blickGrid [(int)(blickPos.x + 1), (int)blickPos.y];
+			if( !other.isOccupied() )
+				ret = true;
+		}
+		return ret;
+	}
+
+	public bool checkLeft()
+	{
+		bool ret = false;
+		if (blickPos.x > 0) {
+			Blick other = GameController.accessGameController ().blickGrid [(int)(blickPos.x - 1), (int)blickPos.y];
+			if( !other.isOccupied() )
+				ret = true;
+		}
+		return ret;
+	}
+
+	public bool checkUp()
+	{
+		bool ret = false;
+		if (blickPos.y < (GameController.rows - 1)) {
+			Blick other = GameController.accessGameController ().blickGrid [(int)blickPos.x, (int)(blickPos.y + 1)];
+			if (!other.isOccupied ())
+				ret = true;
+		}
+		return ret;
+	}
+
+	public bool checkDown()
+	{
+		bool ret = false;
+		if (blickPos.y > 0) {
+			Blick other = GameController.accessGameController ().blickGrid [(int)blickPos.x, (int)(blickPos.y - 1)];
+			if (!other.isOccupied ())
+				ret = true;
+		}
+		return ret;
 	}
 }
