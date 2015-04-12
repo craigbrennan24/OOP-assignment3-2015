@@ -15,7 +15,7 @@ public class Block {
 	//type - 0 = i, 1 = j, 2 = l, 3 = o, 4 = s, 5 = t, 6 = z
 	public static int[] finishedShapePointValues = { 5, 8, 8, 7, 9, 7, 9 };  
 	public static Color[] blockColors = { 
-		new Color( 1.0f, 0.53f, 0.0f, 1.0f ), //Orange
+		new Color( 1.0f, 0.549f, 0.098f, 1.0f ), //Orange
 		new Color( 0.0f, 0.0f, 1.0f, 1.0f ), //Dark Blue
 		new Color( 0.0f, 1.0f, 0.0f, 1.0f ), //Green
 		new Color( 1.0f, 0.92f, 0.016f, 1.0f ), //Yellow
