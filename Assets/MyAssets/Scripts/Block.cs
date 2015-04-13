@@ -51,7 +51,8 @@ public class Block {
 		this.type = type;
 		controlledByPlayer = false;
 		//Set corresponding Blick to "occupied"
-		updateBlick ();
+		if( !GameController._gameOver )
+			updateBlick ();
 	}
 
 	public void moveBlock( Vector2 dest )

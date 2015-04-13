@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour {
 
 	public class FallSpeed
 	{
-		public static float normal = 0f;
+		public static float normal = 0.5f;
 		public static float fast = 0.1f;
 	}
 
