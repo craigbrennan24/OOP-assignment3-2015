@@ -43,4 +43,15 @@ public class Blick {
 	{
 		return block;
 	}
+
+	public static bool isInBlickArray( Vector2 dest )
+	{
+		bool ret = false;
+		if (dest.x >= 0 && dest.x <= (GameController.cols - 1)) {
+			if (dest.y >= 0 && dest.y <= (GameController.rows - 1)) {
+				ret = true;
+			}
+		}
+		return ret;
+	}
 }

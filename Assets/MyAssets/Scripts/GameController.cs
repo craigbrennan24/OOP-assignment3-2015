@@ -6,10 +6,18 @@ public class GameController : MonoBehaviour {
 	//Statics + constants
 	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);
 	public static float fallDelay = 0.5f;
+	public static int score = 0;
 	public static float lastFall = float.MaxValue;
 	public static bool _gameOver = false;
+	public static bool paused = false;
 	public const int rows = 17;
 	public const int cols = 8;
+
+	public class FallSpeed
+	{
+		public static float normal = 0f;
+		public static float fast = 0.1f;
+	}
 
 	//Ingame reference vectors
 	public Vector2[] spawnPoints;
@@ -24,69 +32,118 @@ public class GameController : MonoBehaviour {
 	bool _gameSetup_1;
 	bool _gameSetup_2;
 	bool _gameSetup_3;
+	bool _gameSetup_4;
+	bool _gameSetup_firstPlay;
+	bool _gameOver_showMenuFlag;
 	public GameObject blockSpawner;
 	public bool customSpawn;
 	public bool blockInPlay;
 
 	// Use this for initialization
 	void Start () {
+		_gameSetup_firstPlay = true;
+		setup ();
+	}
+
+	public void setup()
+	{
 		initializeValues ();
-		spawnPoints = GetComponent<SetupScript>().setupSpawnPoints ();
-		blockPositions = GetComponent<SetupScript>().setupBlockPositions ();
+		if (_gameSetup_firstPlay) {
+			spawnPoints = GetComponent<SetupScript> ().setupSpawnPoints ();
+			blockPositions = GetComponent<SetupScript> ().setupBlockPositions ();
+			_gameSetup_firstPlay = false;
+		} else {
+			clearBoard();
+			GameObject.Find("GameOverMenu").GetComponent<GameOverMenuController>().Hide ();
+		}
 		blickGrid = GetComponent<SetupScript>().setupBlicks ();
 	}
 
 	void initializeValues()
 	{
+		startBlocks.Clear ();
 		startBlocks = new ArrayList ();
 		startLines = 1;
+		score = 0;
+		_gameOver = false;
 		_gameSetup = true;
 		_gameSetup_1 = true;
 		_gameSetup_2 = true;
 		_gameSetup_3 = true;
+		_gameSetup_4 = true;
+		_gameOver_showMenuFlag = true;
 		customSpawn = false;
 		blockInPlay = false;
-
 	}
 
-	bool BlockInPlay(){
-		return blockInPlay;
+	void clearBoard(){
+		GameObject[] blocks = GameObject.FindGameObjectsWithTag ("Block");
+		foreach (GameObject block in blocks) {
+			Destroy(block);
+		}
 	}
 
+	float begin = 0;
 	// Update is called once per frame
 	void Update () {
 		if (!_gameOver) {
 			if (_gameSetup) {
 				//SETUP
-				if (_gameSetup_1) {
-					createStartingBlocks (startLines);
-					_gameSetup_1 = false;
-				} else if (_gameSetup_2) {
-					startingBlocksPass ();
-					if (!_gameSetup_3) {
-						GetComponent<PlayerController>().lastMoved = Time.time;
-						_gameSetup_2 = false;
-						_gameSetup = false;
-					}
-					_gameSetup_3 = false;
-				}
+				gameSetup();
 			} else {
+				//IN GAME
+				/*if( Time.time - begin > 5 )
+					_gameOver = true;*/
 				if (!blockInPlay && allBlocksSettled ()) {
 					dropNewBlock ();
 				} else {
+
 				}
 			}
 		} else {
-
+			//GAME OVER
+			if( _gameOver_showMenuFlag )
+			{
+				GameObject.Find("GameOverMenu").GetComponent<GameOverMenuController>().Show();
+				_gameOver_showMenuFlag = false;
+			}
 		}
 	}
 
+	void gameSetup()
+	{
+		if (_gameSetup_1) {
+			//FIRST PASS
+			createStartingBlocks (startLines);
+			_gameSetup_1 = false;
+		} else if (_gameSetup_2) {
+			//SECOND PASS
+			startingBlocksPass ();
+			if (!_gameSetup_3) {
+				//THIRD PASS
+				GetComponent<FinishedShapeDetector>().removeFinishedShapes();
+				if(!_gameSetup_4)
+				{
+					//FOURTH PASS
+					GetComponent<PlayerController>().lastMoved = Time.time;
+					_gameSetup_2 = false;
+					_gameSetup = false;
+					begin = Time.time;
+				}
+				_gameSetup_4 = false;
+			}
+			_gameSetup_3 = false;
+		}
+	}
+	
 	void dropNewBlock()
 	{
 		customSpawn = false;
 		Instantiate (blockSpawner, _hiddenSpawn, Quaternion.identity);
 		blockInPlay = true;
 		lastFall = Time.time;
+		if (fallDelay != FallSpeed.normal)
+			fallDelay = FallSpeed.normal;
 	}
 
 	public Vector2 findAvailableSpawnPoint()
@@ -123,8 +180,10 @@ public class GameController : MonoBehaviour {
 
 	void OnGUI()
 	{
+		/*
 		if( _gameOver )
 			drawText ();
+			*/
 	}
 
 	void drawText()
@@ -302,6 +361,19 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		return ret;
+	}
+
+	public void settleBlocks()
+	{
+		//Use this to force a block update if needed
+		GameObject[] blocks = GameObject.FindGameObjectsWithTag ("Block");
+		while (!allBlocksSettled()) {
+			foreach( GameObject block in blocks )
+			{
+				block.GetComponent<BlockScript>().block.update();
+				break;
+			}
+		}
 	}
 
 	public static GameController accessGameController()

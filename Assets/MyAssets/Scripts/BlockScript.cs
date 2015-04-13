@@ -5,11 +5,9 @@ public class BlockScript : MonoBehaviour {
 
 	public Block block;
 	Vector2 pos;
-	float spawned;
 
 	// Use this for initialization
 	void Start () {
-		spawned = Time.time;
 		block = new Block ();
 		if (GameController.accessGameController ().customSpawn) {
 			//If I want to spawn a block at a custom location
@@ -23,10 +21,15 @@ public class BlockScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (!GameController._gameOver) {
+		if (!GameController._gameOver && !GameController.paused) {
 			block.update ();
 			verifyPosColor ();
 		}
+	}
+
+	public void Remove()
+	{
+		Destroy (gameObject);
 	}
 
 	void verifyPosColor()

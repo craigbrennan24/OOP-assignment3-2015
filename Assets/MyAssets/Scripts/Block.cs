@@ -49,6 +49,7 @@ public class Block {
 
 	public void moveBlock( Vector2 dest )
 	{
+
 		Blick oldBlick = getBlick ();
 		oldBlick.setSettled (false);
 		oldBlick.setOccupied (false);
@@ -80,6 +81,16 @@ public class Block {
 	public void setType(int type)
 	{
 		this.type = type;
+	}
+
+	public void removeBlock()
+	{
+		Blick thisBlick = getBlick ();
+		thisBlick.block = null;
+		thisBlick.setSettled(false);
+		thisBlick.setOccupied(false);
+		GameObject thisBlock = getParentObject ();
+		thisBlock.GetComponent<BlockScript> ().Remove ();
 	}
 
 	public GameObject getParentObject()
@@ -148,14 +159,29 @@ public class Block {
 		if (!thisBlock.isSettled ()) {
 			if( Time.time - GameController.lastFall > GameController.fallDelay )
 			{
-				moveBlock( new Vector2( blickPos.x, (blickPos.y-1) ) );
-				GameController.lastFall = Time.time;
+				if( checkDown() )
+				{
+					moveBlock( new Vector2( blickPos.x, (blickPos.y-1) ) );
+					GameController.lastFall = Time.time;
+				}
 			}
 		}
 	}
 
 
 	//CHECK NEARBY BLICK METHODS
+	public static bool checkCustom(Vector2 dest)
+	{
+		bool ret = false;
+		if (dest.x >= 0 && dest.x <= (GameController.cols - 1)) {
+			if( dest.y >= 0 && dest.y <= (GameController.rows -1 ) ) {
+				Blick other = GameController.accessGameController().blickGrid [(int)dest.x, (int)dest.y];
+				if( !other.isOccupied() )
+					ret = true;
+			}
+		}
+		return ret;
+	}
 
 	public bool checkRight()
 	{
@@ -198,6 +224,14 @@ public class Block {
 			if (!other.isOccupied ())
 				ret = true;
 		}
+		return ret;
+	}
+
+	public static bool CompareTypes( Block one, Block two )
+	{
+		bool ret = false;
+		if (one.getType () == two.getType ())
+			ret = true;
 		return ret;
 	}
 }

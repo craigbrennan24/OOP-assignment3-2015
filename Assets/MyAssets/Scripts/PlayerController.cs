@@ -35,11 +35,27 @@ public class PlayerController : MonoBehaviour {
 						moveRight ();
 						lastMoved_flag = false;
 						lastMoved = Time.time;
+					}else if (GameController.playerIsTouching(GameObject.Find("DownButton").GetComponent<Collider2D>())) {
+						quickFall();
+						lastMoved_flag = false;
+						lastMoved = Time.time;
 					}
 				}
 			}
 		} else {
 			lastMoved_flag = true;
+		}
+	}
+
+
+	public void quickFall()
+	{
+		if (GetComponent<GameController> ().blockInPlay) {
+			if (GameController.fallDelay == GameController.FallSpeed.normal) {
+				GameController.fallDelay = GameController.FallSpeed.fast;
+			} else {
+				GameController.fallDelay = GameController.FallSpeed.normal;
+			}
 		}
 	}
 
