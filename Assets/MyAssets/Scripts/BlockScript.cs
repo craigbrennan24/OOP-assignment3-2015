@@ -32,7 +32,7 @@ public class BlockScript : MonoBehaviour {
 		Destroy (gameObject);
 	}
 
-	void verifyPosColor()
+	public void verifyPosColor()
 	{
 		//Used to check to make sure the block gameobject matches up with its block
 		pos = GameController.accessGameController().blockPositions [(int)block.blickPos.x, (int)block.blickPos.y];

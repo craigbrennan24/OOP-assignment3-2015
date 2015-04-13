@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour {
 
 	public class FallSpeed
 	{
-		public static float normal = 0.5f;
+		public static float normal = 0f;
 		public static float fast = 0.1f;
 	}
 
@@ -238,15 +238,6 @@ public class GameController : MonoBehaviour {
 
 	void createStartingBlocks( int startLines )
 	{
-		/*customSpawn = true;
-		for (int j = 0; j < startLines; j++) {
-			for( int i = 0; i < cols; i++ )
-			{
-				customBlockSpawner = new Vector2( i, j );
-				Instantiate (blockSpawner, customBlockSpawner, Quaternion.identity);
-			}
-		}*/
-
 		int i, j;
 		//if newchain is true block will spawn taking into consideration the colour of the blocks next to them
 		bool newChain = false;
@@ -372,6 +363,7 @@ public class GameController : MonoBehaviour {
 			foreach( GameObject block in blocks )
 			{
 				block.GetComponent<BlockScript>().block.update();
+				block.GetComponent<BlockScript>().verifyPosColor();
 				break;
 			}
 		}

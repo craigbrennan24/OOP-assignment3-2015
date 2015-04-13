@@ -23,46 +23,61 @@ public class FinishedShapeDetector : MonoBehaviour {
 						if( numBlocks != GameObject.FindGameObjectsWithTag("Block").Length )
 							break;
 						Block block = obj.GetComponent<BlockScript>().block;
+						string debugS = "Found shape! Color: " + block.getColorName() + " Type: ";
 						int search = shapeFinder.findShape(block, shapeFinder.map_Iblock);
 						if( search != -1 )
 						{
 							finishedRemovingBlocks = false;
+							debugS += "I";
+							Debug.Log(debugS);
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Sblock);
 						if( search != -1 )
 						{
 							finishedRemovingBlocks = false;
+							debugS += "S";
+							Debug.Log(debugS);
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Zblock);
 						if( search != -1 )
 						{
 							finishedRemovingBlocks = false;
+							debugS += "Z";
+							Debug.Log(debugS);
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Lblock);
 						if( search != -1 )
 						{
 							finishedRemovingBlocks = false;
+							debugS += "L";
+							Debug.Log(debugS);
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Jblock);
 						if( search != -1 )
 						{
 							finishedRemovingBlocks = false;
+							debugS += "J";
+							Debug.Log(debugS);
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Oblock);
 						if( search != -1 )
 						{
 							finishedRemovingBlocks = false;
+							debugS += "O";
+							Debug.Log(debugS);
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Tblock);
 						if( search != -1 )
 						{
 							finishedRemovingBlocks = false;
+							debugS += "T";
+							Debug.Log(debugS);
 							break;
 						}
 					}

@@ -121,9 +121,7 @@ public class Block {
 		Blick thisBlock = getBlick ();
 		if ( blickPos.y != 0 )
 		{
-			//Get space beneath block to check if it should continue falling
-			Blick underBlock = GameController.accessGameController().blickGrid [(int)blickPos.x, (int)(blickPos.y - 1)];
-			if ( !underBlock.isOccupied() ){
+			if ( checkDown() ){
 				thisBlock.setSettled (false);
 				fall ();
 			}
@@ -161,17 +159,56 @@ public class Block {
 	{
 		return blockColors [type];
 	}
+
+	public string getColorName()
+	{
+		string ret = "unknown";
+		switch (type) {
+		case 0:
+			ret = "Orange";
+			break;
+		case 1:
+			ret = "DarkBlue";
+			break;
+		case 2:
+			ret = "Green";
+			break;
+		case 3:
+			ret = "Yellow";
+			break;
+		case 4:
+			ret = "Red";
+			break;
+		case 5:
+			ret = "Pink";
+			break;
+		case 6:
+			ret = "Cyan";
+			break;
+		}
+		return ret;
+	}
 	
 	public void fall()
 	{
 		Blick thisBlock = getBlick ();
 		if (!thisBlock.isSettled ()) {
-			if( Time.time - GameController.lastFall > GameController.fallDelay )
+			if( isControlledByPlayer() )
+			{
+				if( Time.time - GameController.lastFall > GameController.fallDelay )
+				{
+					if( checkDown() )
+					{
+						moveBlock( new Vector2( blickPos.x, (blickPos.y-1) ) );
+						GameController.lastFall = Time.time;
+					}
+				}
+			}
+			else
 			{
 				if( checkDown() )
 				{
 					moveBlock( new Vector2( blickPos.x, (blickPos.y-1) ) );
-					GameController.lastFall = Time.time;
 				}
 			}
 		}

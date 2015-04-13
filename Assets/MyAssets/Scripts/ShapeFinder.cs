@@ -242,13 +242,10 @@ public class ShapeFinder {
 					if( i < 3 )
 					{	
 						Vector2 nextVector = map[searchResult,i] + current.blickPos;
-						if( Blick.isInBlickArray( nextVector ) )
-							next = GameController.accessGameController().blickGrid[ (int)nextVector.x, (int)nextVector.y].getBlock();
-						else
-							continue;
+						next = GameController.accessGameController().blickGrid[ (int)nextVector.x, (int)nextVector.y].getBlock();
 					}
 					current.removeBlock();
-					current = new Block(true);
+					current = null;
 					current = next;
 				}
 			}
