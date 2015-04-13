@@ -174,6 +174,8 @@ public class ShapeFinder {
 		};
 	}
 
+	public int iWatcher;
+	public int jWatcher;
 	public int findShape(Block block, Vector2[,] map)
 	{
 		//Returns -1 if block was not found
@@ -189,52 +191,64 @@ public class ShapeFinder {
 		if( FinishedShapeDetector.blockTypeNearby( block ) )
 		{
 			int connections = 0;                                                                                                                                                                                                                
-			Block current = new Block(), next = new Block();
+			Block current = new Block(true), next = new Block(true);
 			current = block;
-
-			for( int i = 0; i < map.Rank; i++ )
+			for( int i = 0; i < map.GetLength(0); i++ )
 			{
 				connections = 0;
-				for( int j = 0; j < map.GetLength(i); j++ )
+				for( int j = 0; j < map.GetLength(1); j++ )
 				{
 					//IM NOT SURE HOW ASSIGNING WORKS IN C# IT MIGHT FUCK UP SO IF SHIT GOES CRAZY LOOK AT WHAT NEXT IS CHANGING
-					Vector2 nextVector = map[i,j] + current.blickPos;
-					if( !Block.checkCustom(nextVector) )
-				   	{
-						next = GameController.accessGameController().blickGrid[ (int)nextVector.x, (int)nextVector.y].getBlock();
-						if( Block.CompareTypes( current, next ) )
-						{
-							connections++;
-							current = next;
-							if( connections == 3 )
+					Vector2 nextVector = map[i,j];
+					nextVector += current.blickPos;
+					if( Blick.isInBlickArray(nextVector) )
+					{
+						if( !Block.checkCustom(nextVector) )
+					   	{
+							next = GameController.accessGameController().blickGrid[ (int)nextVector.x, (int)nextVector.y].getBlock();
+							if( Block.CompareTypes( current, next ) )
 							{
-								searchResult = i;
+								connections++;
+								current = next;
+								if( connections == 3 )
+								{
+									searchResult = i;
+									break;
+								}
+							}
+							else
+							{
 								break;
 							}
-						}
+						} 
 						else
+						{
 							break;
-					} 
-					else
-						break;
+						}
+					}
 				}
 				if( connections == 3 )
+				{
 					break;
+				}
 			}
 
 			if( searchResult != -1 )
 			{
 				//Remove blocks if shape was found
 				current = block;
-				for( int i = 0; i <= map.GetLength(searchResult); i++ )
+				for( int i = 0; i < 4; i++ )
 				{
-					Vector2 nextVector = map[searchResult,i] + current.blickPos;
-					if( i < map.GetLength(searchResult) )
-					{
-						next = GameController.accessGameController().blickGrid[ (int)nextVector.x, (int)nextVector.y].getBlock();
+					if( i < 3 )
+					{	
+						Vector2 nextVector = map[searchResult,i] + current.blickPos;
+						if( Blick.isInBlickArray( nextVector ) )
+							next = GameController.accessGameController().blickGrid[ (int)nextVector.x, (int)nextVector.y].getBlock();
+						else
+							continue;
 					}
 					current.removeBlock();
-					current = null;
+					current = new Block(true);
 					current = next;
 				}
 			}

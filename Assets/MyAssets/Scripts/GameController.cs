@@ -95,6 +95,7 @@ public class GameController : MonoBehaviour {
 				/*if( Time.time - begin > 5 )
 					_gameOver = true;*/
 				if (!blockInPlay && allBlocksSettled ()) {
+					GetComponent<FinishedShapeDetector>().removeFinishedShapes();
 					dropNewBlock ();
 				} else {
 
@@ -148,7 +149,7 @@ public class GameController : MonoBehaviour {
 
 	public Vector2 findAvailableSpawnPoint()
 	{
-		Vector2 ret = new Vector2 ();
+		Vector2 ret = new Vector2 ( -1, -1 );
 		if (spawnPointExists ()) {
 			//Check if spawn point is empty, find another if not
 			bool spawnPointValid = false;

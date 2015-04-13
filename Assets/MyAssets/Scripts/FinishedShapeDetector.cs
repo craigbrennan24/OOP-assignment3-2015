@@ -20,57 +20,50 @@ public class FinishedShapeDetector : MonoBehaviour {
 				{
 					foreach( GameObject obj in blocks )
 					{
-						Block block = obj.GetComponent<BlockScript>().block;
-						int search = shapeFinder.findShape(block, shapeFinder.map_Iblock);
 						if( numBlocks != GameObject.FindGameObjectsWithTag("Block").Length )
 							break;
+						Block block = obj.GetComponent<BlockScript>().block;
+						int search = shapeFinder.findShape(block, shapeFinder.map_Iblock);
 						if( search != -1 )
 						{
-							Debug.Log ("Found I block");
 							finishedRemovingBlocks = false;
-							continue;
+							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Sblock);
 						if( search != -1 )
 						{
-							Debug.Log ("Found S block");
 							finishedRemovingBlocks = false;
-							continue;
+							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Zblock);
 						if( search != -1 )
 						{
-							Debug.Log ("Found Z block");
 							finishedRemovingBlocks = false;
-							continue;
+							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Lblock);
 						if( search != -1 )
 						{
-							Debug.Log ("Found L block");
 							finishedRemovingBlocks = false;
-							continue;
+							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Jblock);
 						if( search != -1 )
 						{
-							Debug.Log ("Found J block");
 							finishedRemovingBlocks = false;
-							continue;
+							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Oblock);
 						if( search != -1 )
 						{
-							Debug.Log ("Found O block");
 							finishedRemovingBlocks = false;
-							continue;
+							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Tblock);
 						if( search != -1 )
 						{
-							Debug.Log ("Found T block");
 							finishedRemovingBlocks = false;
-							continue;
+							break;
 						}
 					}
 				}

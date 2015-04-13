@@ -35,10 +35,17 @@ public class Block {
 	public Block( int type ) : this( GameController.accessGameController().findAvailableSpawnPoint(), type ){
 		//if only type parameter, create block at one of the spawnpoints with specified type
 	}
+
+	public Block( bool hideMe )
+	{
+		//Use this constructor to create a dummy block object that will not be applied to game world
+		blickPos = GameController._hiddenSpawn;
+		controlledByPlayer = false;
+	}
 	
 	public Block( Vector2 pos, int type )
 	{
-		if (Vector2.Equals (pos, new Vector2 (0, 0)))
+		if (Vector2.Equals (pos, new Vector2 (-1, -1)))
 			GameController._gameOver = true;
 		blickPos = pos;
 		this.type = type;
@@ -90,6 +97,7 @@ public class Block {
 		thisBlick.setSettled(false);
 		thisBlick.setOccupied(false);
 		GameObject thisBlock = getParentObject ();
+		thisBlock.tag += "[delete]";
 		thisBlock.GetComponent<BlockScript> ().Remove ();
 	}
 
@@ -170,6 +178,7 @@ public class Block {
 
 
 	//CHECK NEARBY BLICK METHODS
+	//ALL METHODS RETURN TRUE IF BLICK IS EMPTY, FALSE IF NOT
 	public static bool checkCustom(Vector2 dest)
 	{
 		bool ret = false;
