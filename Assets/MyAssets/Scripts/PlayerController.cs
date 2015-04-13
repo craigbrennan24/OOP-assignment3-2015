@@ -10,11 +10,12 @@ public class PlayerController : MonoBehaviour {
 
 	void Update()
 	{
-		if (GetComponent<GameController> ().blockInPlay) {
-			checkButtons();
-			if( Time.time - lastMoved > 0.25 )
-			{
-				lastMoved_flag = true;
+		if (!GameController.paused) {
+			if (GetComponent<GameController> ().blockInPlay) {
+				checkButtons ();
+				if (Time.time - lastMoved > 0.25) {
+					lastMoved_flag = true;
+				}
 			}
 		}
 	}

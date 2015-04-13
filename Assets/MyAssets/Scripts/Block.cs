@@ -10,10 +10,7 @@ public class Block {
 	public Vector2 blickPos;
 	public static Vector2 startPos = new Vector2 (-2.625f, -4.375f);
 	
-	
-	//Stores value of finishing shapes with blocks
-	//type - 0 = i, 1 = j, 2 = l, 3 = o, 4 = s, 5 = t, 6 = z
-	public static int[] finishedShapePointValues = { 5, 8, 8, 7, 9, 7, 9 };  
+
 	public static Color[] blockColors = { 
 		new Color( 1.0f, 0.549f, 0.098f, 1.0f ), //Orange
 		new Color( 0.0f, 0.0f, 1.0f, 1.0f ), //Dark Blue

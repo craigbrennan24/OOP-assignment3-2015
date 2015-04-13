@@ -23,11 +23,13 @@ public class FinishedShapeDetector : MonoBehaviour {
 						if( numBlocks != GameObject.FindGameObjectsWithTag("Block").Length )
 							break;
 						Block block = obj.GetComponent<BlockScript>().block;
+						string shapeColour = block.getColorName();
 						string debugS = "Found shape! Color: " + block.getColorName() + " Type: ";
 						int search = shapeFinder.findShape(block, shapeFinder.map_Iblock);
 						if( search != -1 )
 						{
 							finishedRemovingBlocks = false;
+							GameController.accessGameController().addScore( new Shape(shapeColour, "I" ) );
 							debugS += "I";
 							Debug.Log(debugS);
 							break;
@@ -35,6 +37,7 @@ public class FinishedShapeDetector : MonoBehaviour {
 						search = shapeFinder.findShape(block, shapeFinder.map_Sblock);
 						if( search != -1 )
 						{
+							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "S" ) );
 							finishedRemovingBlocks = false;
 							debugS += "S";
 							Debug.Log(debugS);
@@ -43,6 +46,7 @@ public class FinishedShapeDetector : MonoBehaviour {
 						search = shapeFinder.findShape(block, shapeFinder.map_Zblock);
 						if( search != -1 )
 						{
+							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "Z" ) );
 							finishedRemovingBlocks = false;
 							debugS += "Z";
 							Debug.Log(debugS);
@@ -51,6 +55,7 @@ public class FinishedShapeDetector : MonoBehaviour {
 						search = shapeFinder.findShape(block, shapeFinder.map_Lblock);
 						if( search != -1 )
 						{
+							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "L" ) );
 							finishedRemovingBlocks = false;
 							debugS += "L";
 							Debug.Log(debugS);
@@ -59,6 +64,7 @@ public class FinishedShapeDetector : MonoBehaviour {
 						search = shapeFinder.findShape(block, shapeFinder.map_Jblock);
 						if( search != -1 )
 						{
+							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "J" ) );
 							finishedRemovingBlocks = false;
 							debugS += "J";
 							Debug.Log(debugS);
@@ -67,6 +73,7 @@ public class FinishedShapeDetector : MonoBehaviour {
 						search = shapeFinder.findShape(block, shapeFinder.map_Oblock);
 						if( search != -1 )
 						{
+							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "O" ) );
 							finishedRemovingBlocks = false;
 							debugS += "O";
 							Debug.Log(debugS);
@@ -75,6 +82,7 @@ public class FinishedShapeDetector : MonoBehaviour {
 						search = shapeFinder.findShape(block, shapeFinder.map_Tblock);
 						if( search != -1 )
 						{
+							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "T" ) );
 							finishedRemovingBlocks = false;
 							debugS += "T";
 							Debug.Log(debugS);

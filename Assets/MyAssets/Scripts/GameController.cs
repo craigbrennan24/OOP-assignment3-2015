@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,7 +13,6 @@ public class GameController : MonoBehaviour {
 	public static float lastFall = float.MaxValue;
 	public static bool _gameOver = false;
 	public static bool paused = false;
-	public List<char> finishedShapes;
 	public const int rows = 17;
 	public const int cols = 8;
 
@@ -41,6 +41,7 @@ public class GameController : MonoBehaviour {
 	public GameObject blockSpawner;
 	public bool customSpawn;
 	public bool blockInPlay;
+	public List<Shape> finishedShapes;
 
 	// Use this for initialization
 	void Start () {
@@ -64,9 +65,8 @@ public class GameController : MonoBehaviour {
 
 	void initializeValues()
 	{
-		startBlocks.Clear ();
 		startBlocks = new List<Block> ();
-		finishedShapes = new List<char> ();
+		finishedShapes = new List<Shape> ();
 		startLines = 1;
 		score = 0;
 		_gameOver = false;
@@ -102,7 +102,15 @@ public class GameController : MonoBehaviour {
 					GetComponent<FinishedShapeDetector>().removeFinishedShapes();
 					dropNewBlock ();
 				} else {
-
+					if( Input.GetKeyDown(KeyCode.P) )
+					{
+						if( Time.timeScale == 1 )
+						{
+							Time.timeScale = 0;
+						}
+						else
+							Time.timeScale = 1;
+					}
 				}
 			}
 		} else {
@@ -112,6 +120,22 @@ public class GameController : MonoBehaviour {
 				GameObject.Find("GameOverMenu").GetComponent<GameOverMenuController>().Show();
 				_gameOver_showMenuFlag = false;
 			}
+		}
+	}
+
+	public void togglePause()
+	{
+		Text t = GameObject.Find ("InGameOverlay").GetComponent<InGameOverlayController> ().pauseButton.GetComponent<Text> ();
+		if (Time.timeScale == 1) {
+			t.fontSize = 27;
+			t.text = "unpause";
+			Time.timeScale = 0;
+			paused = true;
+		} else {
+			t.fontSize = 30;
+			t.text = "pause";
+			Time.timeScale = 1;
+			paused = false;
 		}
 	}
 
@@ -359,9 +383,19 @@ public class GameController : MonoBehaviour {
 		return ret;
 	}
 
-	public void addScore( int points, int finishedBlockType )
+	public void addScore( Shape shape )
 	{
-
+		if (finishedShapes.Count > 0) {
+			if( shape.getShapeType() != finishedShapes[finishedShapes.Count-1].getShapeType() )
+			{
+				scoreMultiplier ++;
+				shape.giveScoreMultiplier();
+			}
+			else
+				scoreMultiplier = 1;
+		}
+		finishedShapes.Add (shape);
+		score += (shape.getValue() * scoreMultiplier);
 	}
 
 	public void settleBlocks()
