@@ -192,9 +192,9 @@ public class ShapeFinder {
 		{
 			int connections = 0;                                                                                                                                                                                                                
 			Block current = new Block(true), next = new Block(true);
-			current = block;
 			for( int i = 0; i < map.GetLength(0); i++ )
 			{
+				current = block;
 				connections = 0;
 				for( int j = 0; j < map.GetLength(1); j++ )
 				{
@@ -220,7 +220,7 @@ public class ShapeFinder {
 							{
 								break;
 							}
-						} 
+						}
 						else
 						{
 							break;

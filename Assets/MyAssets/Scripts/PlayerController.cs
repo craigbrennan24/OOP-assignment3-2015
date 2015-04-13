@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour {
 
 	public bool canControlBlock = false;
 	public float lastMoved = float.MaxValue;
+	bool speedUp_flag = true;
 	bool lastMoved_flag = true;
 
 	void Update()
@@ -31,19 +32,35 @@ public class PlayerController : MonoBehaviour {
 					}
 					//Right
 					else if (GameController.playerIsTouching (GameObject.Find ("RightButton").GetComponent<Collider2D> ())) {
-
 						moveRight ();
-						lastMoved_flag = false;
-						lastMoved = Time.time;
-					}else if (GameController.playerIsTouching(GameObject.Find("DownButton").GetComponent<Collider2D>())) {
-						quickFall();
 						lastMoved_flag = false;
 						lastMoved = Time.time;
 					}
 				}
+				if( speedUp_flag )
+				{
+					if (GameController.playerIsTouching (GameObject.Find ("DownButton").GetComponent<Collider2D> ())) {
+						quickFall ();
+						speedUp_flag = false;
+					}
+				}
 			}
-		} else {
+		} else if (Input.GetKey ("left")) {
+			if (lastMoved_flag) {
+				moveLeft ();
+				lastMoved_flag = false;
+				lastMoved = Time.time;
+			}
+		} else if (Input.GetKey ("right")) {
+			if( lastMoved_flag ) {
+				moveRight ();
+				lastMoved_flag = false;
+				lastMoved = Time.time;
+			}
+		}
+		else {
 			lastMoved_flag = true;
+			speedUp_flag = true;
 		}
 	}
 
@@ -66,10 +83,13 @@ public class PlayerController : MonoBehaviour {
 		if (GetComponent<GameController> ().blockInPlay) {
 			//Check if there is an empty spot to move to
 			Block playerBlock = getPlayerBlock();
-			if( playerBlock.checkRight() )
+			if( playerBlock != null )
 			{
-				Vector2 move = new Vector2( 1.0f, 0.0f );
-				playerBlock.moveBlock( playerBlock.blickPos + move );
+				if( playerBlock.checkRight() )
+				{
+					Vector2 move = new Vector2( 1.0f, 0.0f );
+					playerBlock.moveBlock( playerBlock.blickPos + move );
+				}
 			}
 		}
 	}
@@ -79,10 +99,13 @@ public class PlayerController : MonoBehaviour {
 		if (GetComponent<GameController> ().blockInPlay) {
 			//Check if there is an empty spot to move to
 			Block playerBlock = getPlayerBlock();
-			if( playerBlock.checkLeft() )
+			if( playerBlock != null )
 			{
-				Vector2 move = new Vector2( -1.0f, 0.0f );
-				playerBlock.moveBlock( playerBlock.blickPos + move );
+				if( playerBlock.checkLeft() )
+				{
+					Vector2 move = new Vector2( -1.0f, 0.0f );
+					playerBlock.moveBlock( playerBlock.blickPos + move );
+				}
 			}
 		}
 	}
@@ -92,10 +115,13 @@ public class PlayerController : MonoBehaviour {
 		if (GetComponent<GameController> ().blockInPlay) {
 			//Check if there is an empty spot to move to
 			Block playerBlock = getPlayerBlock();
-			if( playerBlock.checkUp() )
+			if( playerBlock != null )
 			{
-				Vector2 move = new Vector2( 0.0f, 1.0f );
-				playerBlock.moveBlock( playerBlock.blickPos + move );
+				if( playerBlock.checkUp() )
+				{
+					Vector2 move = new Vector2( 0.0f, 1.0f );
+					playerBlock.moveBlock( playerBlock.blickPos + move );
+				}
 			}
 		}
 	}
@@ -105,10 +131,13 @@ public class PlayerController : MonoBehaviour {
 		if (GetComponent<GameController> ().blockInPlay) {
 			//Check if there is an empty spot to move to
 			Block playerBlock = getPlayerBlock();
-			if( playerBlock.checkDown() )
+			if( playerBlock != null )
 			{
-				Vector2 move = new Vector2( 0.0f, -1.0f );
-				playerBlock.moveBlock( playerBlock.blickPos + move );
+				if( playerBlock.checkDown() )
+				{
+					Vector2 move = new Vector2( 0.0f, -1.0f );
+					playerBlock.moveBlock( playerBlock.blickPos + move );
+				}
 			}
 		}
 	}
@@ -120,10 +149,13 @@ public class PlayerController : MonoBehaviour {
 			GameObject[] objects = GameObject.FindGameObjectsWithTag("Block");
 			foreach( GameObject obj in objects )
 			{
-				if( obj.GetComponent<BlockScript>().block.isControlledByPlayer() )
+				if( obj.GetComponent<BlockScript>().block != null )
 				{
-					block = obj.GetComponent<BlockScript>().block;
-					break;
+					if( obj.GetComponent<BlockScript>().block.isControlledByPlayer() )
+					{
+						block = obj.GetComponent<BlockScript>().block;
+						break;
+					}
 				}
 			}
 		}

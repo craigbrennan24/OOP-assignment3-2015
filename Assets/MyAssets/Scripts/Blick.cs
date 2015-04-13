@@ -44,6 +44,16 @@ public class Blick {
 		return block;
 	}
 
+	public static Blick getBlick(Vector2 target)
+	{
+		Blick ret = null;
+		if( isInBlickArray(target) )
+		{
+			ret = GameController.accessGameController().blickGrid[ (int)target.x, (int)target.y ];
+		}
+		return ret;
+	}
+
 	public static bool isInBlickArray( Vector2 dest )
 	{
 		bool ret = false;

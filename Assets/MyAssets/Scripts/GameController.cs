@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
@@ -7,16 +8,18 @@ public class GameController : MonoBehaviour {
 	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);
 	public static float fallDelay = 0.5f;
 	public static int score = 0;
+	public static int scoreMultiplier = 1;
 	public static float lastFall = float.MaxValue;
 	public static bool _gameOver = false;
 	public static bool paused = false;
+	public List<char> finishedShapes;
 	public const int rows = 17;
 	public const int cols = 8;
 
 	public class FallSpeed
 	{
-		public static float normal = 0f;
-		public static float fast = 0.1f;
+		public static float normal = 0.5f;
+		public static float fast = 0f;
 	}
 
 	//Ingame reference vectors
@@ -26,7 +29,7 @@ public class GameController : MonoBehaviour {
 	public Vector2 customBlockSpawner;
 
 	//Flags and values
-	ArrayList startBlocks = new ArrayList();
+	List<Block> startBlocks = new List<Block>();
 	int startLines;
 	public bool _gameSetup;
 	bool _gameSetup_1;
@@ -62,7 +65,8 @@ public class GameController : MonoBehaviour {
 	void initializeValues()
 	{
 		startBlocks.Clear ();
-		startBlocks = new ArrayList ();
+		startBlocks = new List<Block> ();
+		finishedShapes = new List<char> ();
 		startLines = 1;
 		score = 0;
 		_gameOver = false;
@@ -353,6 +357,11 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		return ret;
+	}
+
+	public void addScore( int points, int finishedBlockType )
+	{
+
 	}
 
 	public void settleBlocks()

@@ -68,6 +68,20 @@ public class Block {
 	
 	public bool isControlledByPlayer()
 	{
+		if (controlledByPlayer) {
+			if( !checkDown() ) {
+				Vector2 getBelow = new Vector2( 0.0f, -1.0f );
+				getBelow += blickPos;
+				Blick other = Blick.getBlick(getBelow);
+				if( other != null )
+				{
+					if( other.isSettled() )
+					{
+						removePlayerControl();
+					}
+				}
+			}
+		}
 		return controlledByPlayer;
 	}
 
@@ -79,6 +93,7 @@ public class Block {
 	public void removePlayerControl ()
 	{
 		controlledByPlayer = false;
+		GameController.accessGameController ().blockInPlay = false;
 	}
 
 	public int getType()
@@ -119,6 +134,9 @@ public class Block {
 	public void update()
 	{
 		Blick thisBlock = getBlick ();
+		if (!GameController.accessGameController ().blockInPlay && isControlledByPlayer ()) {
+			removePlayerControl();
+		}
 		if ( blickPos.y != 0 )
 		{
 			if ( checkDown() ){
@@ -137,7 +155,6 @@ public class Block {
 		}
 		if ( isControlledByPlayer() && thisBlock.isSettled ()) {
 			removePlayerControl();
-			GameController.accessGameController().blockInPlay = false;
 		}
 	}
 	
@@ -220,12 +237,10 @@ public class Block {
 	public static bool checkCustom(Vector2 dest)
 	{
 		bool ret = false;
-		if (dest.x >= 0 && dest.x <= (GameController.cols - 1)) {
-			if( dest.y >= 0 && dest.y <= (GameController.rows -1 ) ) {
-				Blick other = GameController.accessGameController().blickGrid [(int)dest.x, (int)dest.y];
-				if( !other.isOccupied() )
-					ret = true;
-			}
+		if ( Blick.isInBlickArray(dest) ) {
+			Blick other = GameController.accessGameController().blickGrid [(int)dest.x, (int)dest.y];
+			if( !other.isOccupied() )
+				ret = true;
 		}
 		return ret;
 	}
