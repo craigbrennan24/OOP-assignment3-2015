@@ -38,8 +38,7 @@ public class PlayerController : MonoBehaviour {
 						lastMoved = Time.time;
 					}
 				}
-				if( speedUp_flag )
-				{
+				if (speedUp_flag) {
 					if (GameController.playerIsTouching (GameObject.Find ("DownButton").GetComponent<Collider2D> ())) {
 						quickFall ();
 						speedUp_flag = false;
@@ -53,11 +52,13 @@ public class PlayerController : MonoBehaviour {
 				lastMoved = Time.time;
 			}
 		} else if (Input.GetKey ("right")) {
-			if( lastMoved_flag ) {
+			if (lastMoved_flag) {
 				moveRight ();
 				lastMoved_flag = false;
 				lastMoved = Time.time;
 			}
+		} else if (Input.GetKeyDown (KeyCode.Escape)) {
+			GameController.accessGameController().togglePause();
 		}
 		else {
 			lastMoved_flag = true;

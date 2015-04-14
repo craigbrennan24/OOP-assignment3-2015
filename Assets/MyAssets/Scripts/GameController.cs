@@ -4,12 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
-
+	
 	//Statics + constants
 	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);
 	public static float fallDelay = 0.5f;
 	public static int score = 0;
+	//Scoremultiplier increases if the player varies the types of shapes they complete (hard cap 12)
 	public static int scoreMultiplier = 1;
+	//Scoremultiplier_combo increases when the player finishes shapes in sequence ( 3 stages: 0.5x (rounded up), 2x, 3x )
+	public static int scoreMultiplier_combo = 1;
+	const int scoreMuliplier_cap = 12;
+	const int scoreMultiplier_combo_cap = 3;
 	public static float lastFall = float.MaxValue;
 	public static bool _gameOver = false;
 	public static bool paused = false;
@@ -18,8 +23,9 @@ public class GameController : MonoBehaviour {
 
 	public class FallSpeed
 	{
-		public static float normal = 0.5f;
-		public static float fast = 0f;
+		public static float normal = 0.2f;
+		public static float fast = 0.05f;
+		public static float max = 0f;
 	}
 
 	//Ingame reference vectors
@@ -58,9 +64,16 @@ public class GameController : MonoBehaviour {
 			_gameSetup_firstPlay = false;
 		} else {
 			clearBoard();
-			GameObject.Find("GameOverMenu").GetComponent<GameOverMenuController>().Hide ();
+			GameObject.Find("InGameOverlay").GetComponent<InGameOverlayController>().hideGameOverMenu();
 		}
 		blickGrid = GetComponent<SetupScript>().setupBlicks ();
+	}
+
+	public void restart()
+	{
+		GameObject.Find ("InGameOverlay").GetComponent<InGameOverlayController> ().reset ();
+		GetComponent<FinishedShapeDetector> ().reset ();
+		setup ();
 	}
 
 	void initializeValues()
@@ -78,6 +91,8 @@ public class GameController : MonoBehaviour {
 		_gameOver_showMenuFlag = true;
 		customSpawn = false;
 		blockInPlay = false;
+		paused = false;
+		Time.timeScale = 1;
 	}
 
 	void clearBoard(){
@@ -87,7 +102,6 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	float begin = 0;
 	// Update is called once per frame
 	void Update () {
 		if (!_gameOver) {
@@ -96,46 +110,44 @@ public class GameController : MonoBehaviour {
 				gameSetup();
 			} else {
 				//IN GAME
-				/*if( Time.time - begin > 5 )
-					_gameOver = true;*/
 				if (!blockInPlay && allBlocksSettled ()) {
 					GetComponent<FinishedShapeDetector>().removeFinishedShapes();
 					dropNewBlock ();
 				} else {
-					if( Input.GetKeyDown(KeyCode.P) )
-					{
-						if( Time.timeScale == 1 )
-						{
-							Time.timeScale = 0;
-						}
-						else
-							Time.timeScale = 1;
-					}
+
 				}
 			}
 		} else {
 			//GAME OVER
 			if( _gameOver_showMenuFlag )
 			{
-				GameObject.Find("GameOverMenu").GetComponent<GameOverMenuController>().Show();
+				GameObject.Find("InGameOverlay").GetComponent<InGameOverlayController>().showGameOverMenu();
 				_gameOver_showMenuFlag = false;
 			}
 		}
 	}
 
+	public void endGame()
+	{
+		_gameOver = true;
+	}
+
 	public void togglePause()
 	{
 		Text t = GameObject.Find ("InGameOverlay").GetComponent<InGameOverlayController> ().pauseButton.GetComponent<Text> ();
+		InGameOverlayController overlay = GameObject.Find ("InGameOverlay").GetComponent<InGameOverlayController> ();
 		if (Time.timeScale == 1) {
 			t.fontSize = 27;
 			t.text = "unpause";
 			Time.timeScale = 0;
 			paused = true;
+			overlay.showOptionsMenu();
 		} else {
 			t.fontSize = 30;
 			t.text = "pause";
 			Time.timeScale = 1;
 			paused = false;
+			overlay.hideOptionsMenu();
 		}
 	}
 
@@ -157,7 +169,6 @@ public class GameController : MonoBehaviour {
 					GetComponent<PlayerController>().lastMoved = Time.time;
 					_gameSetup_2 = false;
 					_gameSetup = false;
-					begin = Time.time;
 				}
 				_gameSetup_4 = false;
 			}
@@ -385,17 +396,51 @@ public class GameController : MonoBehaviour {
 
 	public void addScore( Shape shape )
 	{
+		int scoreInc;
 		if (finishedShapes.Count > 0) {
 			if( shape.getShapeType() != finishedShapes[finishedShapes.Count-1].getShapeType() )
 			{
-				scoreMultiplier ++;
-				shape.giveScoreMultiplier();
+				//If starting a chain multiplier
+				if( scoreMultiplier <= scoreMuliplier_cap )
+				{
+					scoreMultiplier ++;
+					shape.activateScoreMultiplier();
+				}
 			}
 			else
 				scoreMultiplier = 1;
 		}
+		scoreInc = shape.getValue () * scoreMultiplier;
+		FinishedShapeDetector f = GetComponent<FinishedShapeDetector> ();
+		if (f.finishedShapeLastTurn) {
+			//If starting a combo
+			if (f.comboCounter > 0) {
+				if (f.comboCounter < scoreMultiplier_combo_cap)
+					scoreMultiplier_combo = f.comboCounter;
+				else
+					scoreMultiplier_combo = scoreMultiplier_combo_cap;
+			} else
+				scoreMultiplier_combo = 1;
+			scoreInc += applycombo (scoreInc);
+			shape.activateComboMultiplier();
+		} else
+			scoreMultiplier_combo = 0;
 		finishedShapes.Add (shape);
-		score += (shape.getValue() * scoreMultiplier);
+		score += scoreInc;
+	}
+
+	int applycombo( int shapeScore )
+	{
+		int ret = 0;
+		if (scoreMultiplier_combo == 1) {
+			float halfShapeScore = ((float)(shapeScore)) / 2.0f;
+			ret = Mathf.CeilToInt (halfShapeScore);
+		} else if (scoreMultiplier_combo == 2) {
+			ret = shapeScore * 2;
+		} else if (scoreMultiplier_combo == 3) {
+			ret = shapeScore * 3;
+		}
+		return ret;
 	}
 
 	public void settleBlocks()

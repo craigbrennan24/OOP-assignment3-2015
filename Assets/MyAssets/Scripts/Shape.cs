@@ -7,6 +7,7 @@ public class Shape {
 	string shapeType;
 	int value;
 	bool _givesScoreMultiplier;
+	bool _givesComboMultiplier;
 
 	//type - 0 = i, 1 = j, 2 = l, 3 = o, 4 = s, 5 = t, 6 = z
 	public static int[] finishedShapePointValues = { 5, 8, 8, 7, 9, 7, 9 };  
@@ -17,6 +18,7 @@ public class Shape {
 		this.shapeType = shapeType;
 		this.value = ValueOfShapeType (shapeType);
 		_givesScoreMultiplier = false;
+		_givesComboMultiplier = false;
 	}
 
 	public bool givesScoreMultiplier()
@@ -24,7 +26,17 @@ public class Shape {
 		return _givesScoreMultiplier;
 	}
 
-	public void giveScoreMultiplier()
+	public bool givesComboMultiplier()
+	{
+		return _givesComboMultiplier;
+	}
+
+	public void activateComboMultiplier()
+	{
+		_givesComboMultiplier = true;
+	}
+
+	public void activateScoreMultiplier()
 	{
 		_givesScoreMultiplier = true;
 	}

@@ -6,9 +6,13 @@ public class FinishedShapeDetector : MonoBehaviour {
 	ShapeFinder shapeFinder;
 
 	bool finishedRemovingBlocks = true;
+	public bool finishedShapeLastTurn = false;
+	bool finishedShapeThisTurn = false;
+	public int comboCounter;
 
 	public void removeFinishedShapes()
 	{
+		finishedShapeThisTurn = false;
 		if (!GameController.accessGameController ().blockInPlay) {
 			finishedRemovingBlocks = false;
 			while( !finishedRemovingBlocks )
@@ -32,60 +36,68 @@ public class FinishedShapeDetector : MonoBehaviour {
 							GameController.accessGameController().addScore( new Shape(shapeColour, "I" ) );
 							debugS += "I";
 							Debug.Log(debugS);
+							finishedShapeThisTurn = true;
+							comboCounter ++;
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Sblock);
 						if( search != -1 )
 						{
-							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "S" ) );
+							GameController.accessGameController().addScore( new Shape(shapeColour, "S" ) );
 							finishedRemovingBlocks = false;
 							debugS += "S";
 							Debug.Log(debugS);
+							finishedShapeThisTurn = true;
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Zblock);
 						if( search != -1 )
 						{
-							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "Z" ) );
+							GameController.accessGameController().addScore( new Shape(shapeColour, "Z" ) );
 							finishedRemovingBlocks = false;
 							debugS += "Z";
 							Debug.Log(debugS);
+							finishedShapeThisTurn = true;
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Lblock);
 						if( search != -1 )
 						{
-							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "L" ) );
+							GameController.accessGameController().addScore( new Shape(shapeColour, "L" ) );
 							finishedRemovingBlocks = false;
 							debugS += "L";
 							Debug.Log(debugS);
+							finishedShapeThisTurn = true;
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Jblock);
 						if( search != -1 )
 						{
-							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "J" ) );
+							GameController.accessGameController().addScore( new Shape(shapeColour, "J" ) );
 							finishedRemovingBlocks = false;
 							debugS += "J";
 							Debug.Log(debugS);
+							finishedShapeThisTurn = true;
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Oblock);
 						if( search != -1 )
 						{
-							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "O" ) );
+							GameController.accessGameController().addScore( new Shape(shapeColour, "O" ) );
 							finishedRemovingBlocks = false;
 							debugS += "O";
 							Debug.Log(debugS);
+							finishedShapeThisTurn = true;
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Tblock);
 						if( search != -1 )
 						{
-							GameController.accessGameController().finishedShapes.Add( new Shape(shapeColour, "T" ) );
+							GameController.accessGameController().addScore( new Shape(shapeColour, "T" ) );
 							finishedRemovingBlocks = false;
 							debugS += "T";
 							Debug.Log(debugS);
+							finishedShapeThisTurn = true;
 							break;
 						}
 					}
@@ -95,12 +107,20 @@ public class FinishedShapeDetector : MonoBehaviour {
 			{
 				GameController.accessGameController().settleBlocks();
 			}
+			finishedShapeLastTurn = finishedShapeThisTurn;
 		}
 	}
 
 	void Start()
 	{
 		shapeFinder = new ShapeFinder ();
+		comboCounter = 0;
+	}
+
+	public void reset()
+	{
+		finishedShapeLastTurn = false;
+		comboCounter = 0;
 	}
 
 	public static bool blockTypeNearby( Block block )
