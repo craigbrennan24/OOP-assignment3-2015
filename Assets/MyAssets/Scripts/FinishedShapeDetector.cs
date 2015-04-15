@@ -109,6 +109,8 @@ public class FinishedShapeDetector : MonoBehaviour {
 			}
 			finishedShapeLastTurn = finishedShapeThisTurn;
 		}
+		if (!finishedShapeLastTurn)
+			comboCounter = 0;
 	}
 
 	void Start()

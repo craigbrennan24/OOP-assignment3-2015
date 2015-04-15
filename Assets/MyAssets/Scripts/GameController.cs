@@ -6,16 +6,14 @@ using System.Collections.Generic;
 public class GameController : MonoBehaviour {
 	
 	//Statics + constants
-	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);
-	public static float fallDelay = 0.5f;
+	public static Vector2 _hiddenSpawn = new Vector2 (0.0f, -20.0f);//Not sure if I'll keep this, use to spawn a block off screen before moving it to a custom location
+	public static float fallDelay = 0.5f;//Current speed of falling blocks
 	public static int score = 0;
-	//Scoremultiplier increases if the player varies the types of shapes they complete (hard cap 12)
-	public static int scoreMultiplier = 1;
-	//Scoremultiplier_combo increases when the player finishes shapes in sequence ( 3 stages: 0.5x (rounded up), 2x, 3x )
-	public static int scoreMultiplier_combo = 1;
-	const int scoreMuliplier_cap = 12;
+	public static int scoreMultiplier = 1;//Increases if the player varies the types of shapes they complete (hard cap 12)
+	public static int scoreMultiplier_combo = 1;//Increases when the player finishes shapes in succession ( 3 stages: 2.5x(rounded up), 5x, 10x )
+	const int scoreMuliplier_cap = 8;
 	const int scoreMultiplier_combo_cap = 3;
-	public static float lastFall = float.MaxValue;
+	public static float lastFall = float.MaxValue;//Last time a block was dropped
 	public static bool _gameOver = false;
 	public static bool paused = false;
 	public const int rows = 17;
@@ -23,9 +21,9 @@ public class GameController : MonoBehaviour {
 
 	public class FallSpeed
 	{
-		public static float normal = 0.2f;
-		public static float fast = 0.05f;
-		public static float max = 0f;
+		public static float normal = 0.2f;//Default speed for all falling blocks
+		public static float fast = 0.05f;//Speed the block falls when the user presses the quickfall button
+		public static float max = 0f;//Highest speed possible, normal will slowly increment towards this as the game goes on.
 	}
 
 	//Ingame reference vectors
@@ -37,17 +35,20 @@ public class GameController : MonoBehaviour {
 	//Flags and values
 	List<Block> startBlocks = new List<Block>();
 	int startLines;
-	public bool _gameSetup;
-	bool _gameSetup_1;
-	bool _gameSetup_2;
-	bool _gameSetup_3;
-	bool _gameSetup_4;
-	bool _gameSetup_firstPlay;
-	bool _gameOver_showMenuFlag;
-	public GameObject blockSpawner;
-	public bool customSpawn;
-	public bool blockInPlay;
-	public List<Shape> finishedShapes;
+		//These flags are used to allow gamesetup to run for the first few frames
+		//without causing failures across the board because values that other scripts are
+		//depending on haven't been initialized
+		public bool _gameSetup;
+		bool _gameSetup_1;
+		bool _gameSetup_2;
+		bool _gameSetup_3;
+		bool _gameSetup_4;
+		bool _gameSetup_firstPlay;
+	bool _gameOver_showMenuFlag;//Tells the gameover menu to display
+	public GameObject blockSpawner;//Blank block gameobject used when instantiating
+	public bool customSpawn;//Set to true if you need to force a block to spawn at a custom location (ie, starting block)
+	public bool blockInPlay;//True if there is a block falling that is controlled by the player
+	public List<Shape> finishedShapes;//List of all finished shapes in the current game, used by scoreboard.
 
 	// Use this for initialization
 	void Start () {
@@ -396,6 +397,7 @@ public class GameController : MonoBehaviour {
 
 	public void addScore( Shape shape )
 	{
+		//Determines the worth of finished shape, applies appropriate multipliers and then adds to total score. Also adds shape to list of finished shapes for the scoreboard.
 		int scoreInc;
 		if (finishedShapes.Count > 0) {
 			if( shape.getShapeType() != finishedShapes[finishedShapes.Count-1].getShapeType() )
@@ -403,9 +405,10 @@ public class GameController : MonoBehaviour {
 				//If starting a chain multiplier
 				if( scoreMultiplier <= scoreMuliplier_cap )
 				{
+					//Dont increment multiplier above the cap
 					scoreMultiplier ++;
-					shape.activateScoreMultiplier();
 				}
+				shape.activateScoreMultiplier();
 			}
 			else
 				scoreMultiplier = 1;
@@ -431,14 +434,15 @@ public class GameController : MonoBehaviour {
 
 	int applycombo( int shapeScore )
 	{
+		//used in addScore() to multiply the gained score by the combo multiplier before adding to total score
 		int ret = 0;
 		if (scoreMultiplier_combo == 1) {
-			float halfShapeScore = ((float)(shapeScore)) / 2.0f;
+			float halfShapeScore = ((float)(shapeScore)) * 2.5f;
 			ret = Mathf.CeilToInt (halfShapeScore);
 		} else if (scoreMultiplier_combo == 2) {
-			ret = shapeScore * 2;
+			ret = shapeScore * 5;
 		} else if (scoreMultiplier_combo == 3) {
-			ret = shapeScore * 3;
+			ret = shapeScore * 10;
 		}
 		return ret;
 	}
