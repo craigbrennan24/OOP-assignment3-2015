@@ -116,11 +116,11 @@ public class InGameOverlayController : MonoBehaviour {
 		if (score.givesComboMultiplier ()) {
 			float combo = GameController.scoreMultiplier_combo;
 			if( combo == 1 )
-				scoreGainText.text += "\nx0.5";
+				scoreGainText.text += "\nx2.5";
 			else if( combo == 2 )
-				scoreGainText.text += "\nx2";
+				scoreGainText.text += "\nx5";
 			else if( combo == 3 )
-				scoreGainText.text += "\nx3";
+				scoreGainText.text += "\nx10";
 		}
 		lastScorePop = Time.time;
 	}

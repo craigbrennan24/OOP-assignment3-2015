@@ -21,9 +21,10 @@ public class GameController : MonoBehaviour {
 
 	public class FallSpeed
 	{
-		public static float normal = 0.2f;//Default speed for all falling blocks
-		public static float fast = 0.05f;//Speed the block falls when the user presses the quickfall button
-		public static float max = 0f;//Highest speed possible, normal will slowly increment towards this as the game goes on.
+		public static float currentSpeed = 0.5f;//Speed being used by falling blocks
+		public static float start = 0.5f;//Starting block fall speed
+		public static float fast = 0.1f;//Speed the block falls when the user presses the quickfall button
+		public static float max = 0f;//Highest speed possible, currentSpeed will slowly increment towards this as the game goes on.
 	}
 
 	//Ingame reference vectors
@@ -35,6 +36,10 @@ public class GameController : MonoBehaviour {
 	//Flags and values
 	List<Block> startBlocks = new List<Block>();
 	int startLines;
+	int speed_timesIncreased;
+	int speed_maxIncrements;
+	float speed_lastIncreased;
+	float speed_timeBetweenIncs;
 		//These flags are used to allow gamesetup to run for the first few frames
 		//without causing failures across the board because values that other scripts are
 		//depending on haven't been initialized
@@ -81,8 +86,12 @@ public class GameController : MonoBehaviour {
 	{
 		startBlocks = new List<Block> ();
 		finishedShapes = new List<Shape> ();
-		startLines = 1;
+		startLines = 4;
 		score = 0;
+		speed_lastIncreased = Time.time;
+		speed_timesIncreased = 0;
+		speed_timeBetweenIncs = 7;
+		speed_maxIncrements = 10;
 		_gameOver = false;
 		_gameSetup = true;
 		_gameSetup_1 = true;
@@ -114,6 +123,7 @@ public class GameController : MonoBehaviour {
 				if (!blockInPlay && allBlocksSettled ()) {
 					GetComponent<FinishedShapeDetector>().removeFinishedShapes();
 					dropNewBlock ();
+					increaseSpeed();
 				} else {
 
 				}
@@ -131,6 +141,18 @@ public class GameController : MonoBehaviour {
 	public void endGame()
 	{
 		_gameOver = true;
+	}
+
+	void increaseSpeed()
+	{
+		//Speeds up the block gradually over time
+		if (speed_timesIncreased < speed_maxIncrements) {
+			if (Time.time - speed_lastIncreased > speed_timeBetweenIncs) {
+				speed_timesIncreased++;
+				speed_lastIncreased = Time.time;
+				FallSpeed.currentSpeed -= (FallSpeed.start/10);
+			}
+		}
 	}
 
 	public void togglePause()
@@ -183,8 +205,8 @@ public class GameController : MonoBehaviour {
 		Instantiate (blockSpawner, _hiddenSpawn, Quaternion.identity);
 		blockInPlay = true;
 		lastFall = Time.time;
-		if (fallDelay != FallSpeed.normal)
-			fallDelay = FallSpeed.normal;
+		if (fallDelay != FallSpeed.currentSpeed)
+			fallDelay = FallSpeed.currentSpeed;
 	}
 
 	public Vector2 findAvailableSpawnPoint()

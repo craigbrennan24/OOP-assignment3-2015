@@ -70,10 +70,10 @@ public class PlayerController : MonoBehaviour {
 	public void quickFall()
 	{
 		if (GetComponent<GameController> ().blockInPlay) {
-			if (GameController.fallDelay == GameController.FallSpeed.normal) {
+			if (GameController.fallDelay == GameController.FallSpeed.currentSpeed) {
 				GameController.fallDelay = GameController.FallSpeed.fast;
 			} else {
-				GameController.fallDelay = GameController.FallSpeed.normal;
+				GameController.fallDelay = GameController.FallSpeed.currentSpeed;
 			}
 		}
 	}
