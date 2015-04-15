@@ -21,9 +21,9 @@ public class GameController : MonoBehaviour {
 
 	public class FallSpeed
 	{
-		public static float currentSpeed = 0.5f;//Speed being used by falling blocks
 		public static float start = 0.5f;//Starting block fall speed
-		public static float fast = 0.1f;//Speed the block falls when the user presses the quickfall button
+		public static float currentSpeed = start;//Speed being used by falling blocks
+		public static float fast = 0f;//Speed the block falls when the user presses the quickfall button
 		public static float max = 0f;//Highest speed possible, currentSpeed will slowly increment towards this as the game goes on.
 	}
 
