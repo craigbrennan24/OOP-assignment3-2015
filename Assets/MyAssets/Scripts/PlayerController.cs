@@ -57,7 +57,12 @@ public class PlayerController : MonoBehaviour {
 				lastMoved_flag = false;
 				lastMoved = Time.time;
 			}
-		} else if (Input.GetKeyDown (KeyCode.Escape)) {
+		} else if( Input.GetKey("down") ) {
+			if( speedUp_flag ) {
+				quickFall();
+				speedUp_flag = false;
+			}
+		}else if (Input.GetKeyDown (KeyCode.Escape)) {
 			GameController.accessGameController().togglePause();
 		}
 		else {
