@@ -88,9 +88,10 @@ public class GameController : MonoBehaviour {
 		finishedShapes = new List<Shape> ();
 		startLines = 4;
 		score = 0;
+		FallSpeed.currentSpeed = FallSpeed.start;
 		speed_lastIncreased = Time.time;
 		speed_timesIncreased = 0;
-		speed_timeBetweenIncs = 7;
+		speed_timeBetweenIncs = 16;
 		speed_maxIncrements = 10;
 		_gameOver = false;
 		_gameSetup = true;

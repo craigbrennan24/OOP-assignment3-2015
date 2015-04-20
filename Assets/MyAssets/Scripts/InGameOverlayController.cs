@@ -66,10 +66,6 @@ public class InGameOverlayController : MonoBehaviour {
 		if (newCheck > lastCheck) {
 			int counter = lastCheck;
 			lastCheck = newCheck;
-			if( counter > 0 )
-			{
-				//counter--;
-			}
 			for( int i = counter; i < newCheck; i++ )
 			{
 				scoreQueue.Enqueue(GameController.accessGameController ().finishedShapes[i]);
