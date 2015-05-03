@@ -50,11 +50,6 @@ public class OptionsMenuController : MonoBehaviour {
 		else
 			ShowButtons ();
 	}
-	
-	public void ExitGame()
-	{
-		Application.Quit ();
-	}
 
 	public void restart()
 	{

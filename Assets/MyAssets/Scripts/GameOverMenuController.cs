@@ -25,7 +25,7 @@ public class GameOverMenuController : MonoBehaviour {
 
 	public void ExitGame()
 	{
-		Application.Quit ();
+		Application.LoadLevel ("Launch");
 	}
 
 	public void Restart()
