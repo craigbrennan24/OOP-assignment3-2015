@@ -122,7 +122,7 @@ public class GameController : MonoBehaviour {
 			} else {
 				//IN GAME
 				if (!blockInPlay && allBlocksSettled ()) {
-					GetComponent<FinishedShapeDetector>().removeFinishedShapes();
+					GetComponent<FinishedShapeDetector>().removeFinishedShapes( true );
 					dropNewBlock ();
 					increaseSpeed();
 				} else {
@@ -186,7 +186,7 @@ public class GameController : MonoBehaviour {
 			startingBlocksPass ();
 			if (!_gameSetup_3) {
 				//THIRD PASS
-				GetComponent<FinishedShapeDetector>().removeFinishedShapes();
+				GetComponent<FinishedShapeDetector>().removeFinishedShapes( false );
 				if(!_gameSetup_4)
 				{
 					//FOURTH PASS
@@ -441,10 +441,7 @@ public class GameController : MonoBehaviour {
 		if (f.finishedShapeLastTurn) {
 			//If starting a combo
 			if (f.comboCounter > 0) {
-				if (f.comboCounter < scoreMultiplier_combo_cap)
-					scoreMultiplier_combo = f.comboCounter;
-				else
-					scoreMultiplier_combo = scoreMultiplier_combo_cap;
+				scoreMultiplier_combo += f.comboCounter;
 			} else
 				scoreMultiplier_combo = 1;
 			scoreInc += applycombo (scoreInc);
@@ -458,6 +455,8 @@ public class GameController : MonoBehaviour {
 	int applycombo( int shapeScore )
 	{
 		//used in addScore() to multiply the gained score by the combo multiplier before adding to total score
+		if (scoreMultiplier_combo > scoreMultiplier_combo_cap)
+			scoreMultiplier_combo = scoreMultiplier_combo_cap;
 		int ret = 0;
 		if (scoreMultiplier_combo == 1) {
 			float halfShapeScore = ((float)(shapeScore)) * 2.5f;

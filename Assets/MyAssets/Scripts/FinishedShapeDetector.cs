@@ -10,14 +10,17 @@ public class FinishedShapeDetector : MonoBehaviour {
 	bool finishedShapeThisTurn = false;
 	public int comboCounter;
 
-	public void removeFinishedShapes()
+	public void removeFinishedShapes( bool checkForCombos )
 	{
-		finishedShapeThisTurn = false;
+		if( checkForCombos )
+			finishedShapeThisTurn = false;
 		if (!GameController.accessGameController ().blockInPlay) {
-			finishedRemovingBlocks = false;
+			if( checkForCombos )
+				finishedRemovingBlocks = false;
 			while( !finishedRemovingBlocks )
 			{
-				finishedRemovingBlocks = true;
+				if( checkForCombos )
+					finishedRemovingBlocks = true;
 				GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
 				int numBlocks = blocks.Length;
 				if( blocks.Length > 0 )
@@ -36,9 +39,12 @@ public class FinishedShapeDetector : MonoBehaviour {
 							GameController.accessGameController().addScore( new Shape(shapeColour, "I" ) );
 							debugS += "I";
 							Debug.Log(debugS);
-							finishedShapeThisTurn = true;
-							if( finishedShapeLastTurn )
-								comboCounter ++;
+							if( checkForCombos )
+							{
+								finishedShapeThisTurn = true;
+								if( finishedShapeLastTurn )
+									comboCounter ++;
+							}
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Sblock);
@@ -48,9 +54,12 @@ public class FinishedShapeDetector : MonoBehaviour {
 							finishedRemovingBlocks = false;
 							debugS += "S";
 							Debug.Log(debugS);
-							finishedShapeThisTurn = true;
-							if( finishedShapeLastTurn )
-								comboCounter ++;
+							if( checkForCombos )
+							{
+								finishedShapeThisTurn = true;
+								if( finishedShapeLastTurn )
+									comboCounter ++;
+							}
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Zblock);
@@ -60,9 +69,12 @@ public class FinishedShapeDetector : MonoBehaviour {
 							finishedRemovingBlocks = false;
 							debugS += "Z";
 							Debug.Log(debugS);
-							finishedShapeThisTurn = true;
-							if( finishedShapeLastTurn )
-								comboCounter ++;
+							if( checkForCombos )
+							{
+								finishedShapeThisTurn = true;
+								if( finishedShapeLastTurn )
+									comboCounter ++;
+							}
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Lblock);
@@ -72,9 +84,12 @@ public class FinishedShapeDetector : MonoBehaviour {
 							finishedRemovingBlocks = false;
 							debugS += "L";
 							Debug.Log(debugS);
-							finishedShapeThisTurn = true;
-							if( finishedShapeLastTurn )
-								comboCounter ++;
+							if( checkForCombos )
+							{
+								finishedShapeThisTurn = true;
+								if( finishedShapeLastTurn )
+									comboCounter ++;
+							}
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Jblock);
@@ -84,9 +99,12 @@ public class FinishedShapeDetector : MonoBehaviour {
 							finishedRemovingBlocks = false;
 							debugS += "J";
 							Debug.Log(debugS);
-							finishedShapeThisTurn = true;
-							if( finishedShapeLastTurn )
-								comboCounter ++;
+							if( checkForCombos )
+							{
+								finishedShapeThisTurn = true;
+								if( finishedShapeLastTurn )
+									comboCounter ++;
+							}
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Oblock);
@@ -96,9 +114,12 @@ public class FinishedShapeDetector : MonoBehaviour {
 							finishedRemovingBlocks = false;
 							debugS += "O";
 							Debug.Log(debugS);
-							finishedShapeThisTurn = true;
-							if( finishedShapeLastTurn )
-								comboCounter ++;
+							if( checkForCombos )
+							{
+								finishedShapeThisTurn = true;
+								if( finishedShapeLastTurn )
+									comboCounter ++;
+							}
 							break;
 						}
 						search = shapeFinder.findShape(block, shapeFinder.map_Tblock);
@@ -108,9 +129,12 @@ public class FinishedShapeDetector : MonoBehaviour {
 							finishedRemovingBlocks = false;
 							debugS += "T";
 							Debug.Log(debugS);
-							finishedShapeThisTurn = true;
-							if( finishedShapeLastTurn )
-								comboCounter ++;
+							if( checkForCombos )
+							{
+								finishedShapeThisTurn = true;
+								if( finishedShapeLastTurn )
+									comboCounter ++;
+							}
 							break;
 						}
 					}
@@ -120,9 +144,12 @@ public class FinishedShapeDetector : MonoBehaviour {
 			{
 				GameController.accessGameController().settleBlocks();
 			}
-			if (!finishedShapeLastTurn)
-				comboCounter = 0;
-			finishedShapeLastTurn = finishedShapeThisTurn;
+			if( checkForCombos )
+			{
+				if (!finishedShapeThisTurn)
+					comboCounter = 0;
+				finishedShapeLastTurn = finishedShapeThisTurn;
+			}
 		}
 	}
 
