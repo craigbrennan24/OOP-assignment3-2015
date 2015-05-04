@@ -192,7 +192,7 @@ RectTransform:
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 0, y: -310}
-  m_SizeDelta: {x: 367.799988, y: 500}
+  m_SizeDelta: {x: 367.799988, y: 530}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &4817547
 MonoBehaviour:
@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Color: {r: .196078435, g: .196078435, b: .196078435, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 7da37f59d77ff034fb3591cc950158d7, type: 3}
-    m_FontSize: 20
+    m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -224,6 +224,10 @@ MonoBehaviour:
 
     In BlocBlick your objective is to create the shapes of classic tetris pieces with
     falling coloured blocks in a race against time while scoring points
+
+
+    Tap the left and right sides of the screen to control where the block will fall
+    - You can tap the center to cause it to drop where it is
 
 
     The blocks will begin to fall faster as the game continues, making it more difficult
@@ -1483,7 +1487,7 @@ MonoBehaviour:
   m_Color: {r: .196078435, g: .196078435, b: .196078435, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 7da37f59d77ff034fb3591cc950158d7, type: 3}
-    m_FontSize: 22
+    m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -2127,7 +2131,7 @@ MonoBehaviour:
   m_Color: {r: .196078435, g: .196078435, b: .196078435, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 7da37f59d77ff034fb3591cc950158d7, type: 3}
-    m_FontSize: 20
+    m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
