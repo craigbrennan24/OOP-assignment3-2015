@@ -1217,7 +1217,7 @@ RectTransform:
   m_RootOrder: 5
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 175, y: -385}
+  m_AnchoredPosition: {x: -175, y: -385}
   m_SizeDelta: {x: 123.800003, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1117113067
@@ -1284,7 +1284,7 @@ RectTransform:
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 0, y: -683}
-  m_SizeDelta: {x: 458.299988, y: 25}
+  m_SizeDelta: {x: 458.299988, y: 50}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1228394174
 MonoBehaviour:
@@ -1311,7 +1311,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: TheSims4 is property of Electronic Arts Inc. (EA Games)
+  m_Text: 'TheSims4 is property of Electronic Arts Inc. (EA Games)
+
+    This game will always be free with no ads, please consider rating and telling
+    your friends to keep me motivated on updating'
 --- !u!222 &1228394175
 CanvasRenderer:
   m_ObjectHideFlags: 0
